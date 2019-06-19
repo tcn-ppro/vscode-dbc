@@ -3,6 +3,7 @@
     "displayName": "vscode-dbc",
     "description": "DBC DX Language Support",
     "version": "0.0.1",
+    "extensionKind": "workspace",
     "engines": {
         "vscode": "^1.35.0"
     },
@@ -10,16 +11,30 @@
         "Programming Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "dbc",
-            "aliases": ["dbc", "DBC"],
-            "extensions": [".TXT",".PRG",".VRB"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "dbc",
-            "scopeName": "source.dbc",
-            "path": "./syntaxes/dbc.tmLanguage"
-        }]
+        "languages": [
+            {
+                "id": "dbc",
+                "aliases": [
+                    "dbc",
+                    "DBC"
+                ],
+                "extensions": [
+                    ".TXT",
+                    ".PRG",
+                    ".VRB"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "dbc",
+                "scopeName": "source.dbc",
+                "path": "./syntaxes/dbc.tmLanguage.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "js-yaml": "^3.13.1"
     }
 }
