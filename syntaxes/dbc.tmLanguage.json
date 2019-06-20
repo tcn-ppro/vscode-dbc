@@ -4,190 +4,54 @@
   "version": "0.0.1",
   "patterns": [
     {
-      "match": "^\\s+(INC)\\s*(.*)",
-      "name": "meta.import.dbc",
-      "captures": {
-        "1": {
-          "name": "keyword.other.dbc"
-        },
-        "2": {
-          "name": "storage.modifier.import.dbc"
-        }
-      }
+      "include": "#prototype"
     },
     {
-      "include": "#code"
+      "include": "#main"
     }
   ],
   "repository": {
-    "code": {
+    "prototype": {
       "patterns": [
+        {
+          "include": "#line-comments"
+        },
         {
           "include": "#strings"
-        },
-        {
-          "include": "#keywords"
-        },
-        {
-          "include": "#functions"
-        },
-        {
-          "include": "#expressions"
-        },
-        {
-          "include": "#all-types"
-        },
-        {
-          "include": "#comments"
         }
       ]
     },
-    "keywords": {
+    "main": {
       "patterns": [
         {
-          "name": "keyword.control.dbc",
-          "match": "^\\s+(LOOP|WHILE|DO|FOR|REPEAT|CONTINUE|BREAK|UNTIL)\\b"
-        },
-        {
-          "name": "keyword.control.dbc",
-          "match": "^\\s+(RETURN|CHAIN|STOP|BEEP)\\s+"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+([A-Z]\\.)?(QUERY\\.[A-Z0-9]{1,3}[1-9]{1,2})(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(CALL)\\s([A-Z]\\.)?((NEXT|BACK)\\.[A-Z0-9]{1,3}[1-9]{1,2})(?!\\w|\\.|\\$|=)",
-          "captures": {
-            "1": {
-              "name": "keyword.control.dbc"
-            }
-          }
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(CALL)\\s([A-Z]\\.)?((BK|PT|WT|RD|RT|OD|OP|RK|CO|CL|PR|UK|RP)[A-Z0-9]{1,3}[1-9]{0,2})(?!\\w|\\.|\\$|=)",
-          "captures": {
-            "1": {
-              "name": "keyword.control.dbc"
-            },
-            "2": {
-              "name": "support.function.dbc"
-            }
-          }
-        },
-        {
-          "match": "^\\s+(GOTO|CALL|PERFORM|BRANCH)\\s+([A-Z0-9._$@]+(?!\\w|\\.|\\$|=))",
-          "captures": {
-            "1": {
-              "name": "keyword.control.dbc"
-            },
-            "2": {
-              "name": "entity.name.function.dbc"
-            }
-          }
-        },
-        {
-          "name": "keyword.control.dbc",
-          "match": "^\\s+(ENDSWITCH|CASE|DEFAULT)\\s+"
-        },
-        {
-          "name": "keyword.control.dbc",
-          "match": "^\\s+(IF|ENDIF|ELSE)(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "keyword.control.dbc",
-          "match": "(?<!\\w|\\.|\\$)(IF|ENDIF|ELSE)(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "keyword.operator.arithmetic.dbc",
-          "match": "(?<!^)(\\-|\\+|\\*|\\/|%)"
-        },
-        {
-          "name": "constant.numeric.dbc",
-          "match": "\\b[0-9]*(\\.[0-9]+)*\\b"
-        },
-        {
-          "name": "constant.numeric.dbc",
-          "match": "\\s(@)$"
-        },
-        {
-          "name": "keyword.operator.logical.dbc",
-          "match": "(?<!\\w|\\.|\\$)(AND|OR|NOT)(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "entity.name.function.dbc",
-          "match": "([A-Z0-9._$@]+(?!\\w|\\.|\\$|=))\\s+(ROUTINE|LROUTINE|VERB)(?!\\w|\\.|\\$|=)\\s([A-Z0-9._$@]+(?!\\w|\\.|\\$|=|,))*",
-          "captures": {
-            "1": {
-              "name": "entity.name.function.dbc"
-            },
-            "2": {
-              "name": "entity.name.function.dbc"
-            },
-            "3": {
-              "name": "variable.parameter.dbc"
-            }
-          }
-        },
-        {
-          "name": "entity.name.function.dbc",
-          "match": "^\\s(ENDROUTINE)(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "keyword.operator.comparison.dbc",
-          "match": "(=|!=|<=|>=|<>|<|>)"
-        },
-        {
-          "name": "meta.arrayindex.meta",
-          "match": "(\\[|\\])"
-        },
-        {
-          "name": "keyword.operator.assignment.dbc",
-          "begin": "(?!\\w|\\.|\\$|=)\\s(FROM|WITH|OF|IN)\\s",
-          "beginCaptures": {
-            "1": {
-              "name": "keyword.ssraw"
-            },
-            "3": {
-              "name": "constant.numeric.ssraw"
-            }
-          },
-          "patterns": [
-            {
-              "include": "$self"
-            },
-            {
-              "name": "keyword.operator.assignment.dbc",
-              "match": ","
-            },
-            {
-              "name": "variable.parameter.dbc",
-              "match": "([A-Z0-9._$@]+)"
-            }
-          ],
-          "end": "\\n"
-        },
-        {
-          "name": "keyword.operator.assignment.dbc",
-          "match": "(?!\\w|\\.|\\$|=)\\s(TO|INTO)\\s"
-        },
-        {
-          "name": "entity.name.function.dbc",
-          "match": "^([A-Z0-9_$@]+[A-Z0-9._$@]*(?!\\w|\\.|\\$|=))$"
+          "include": "#variable-definitions"
         }
       ]
     },
-    "comments": {
+    "line-comments": {
       "patterns": [
         {
-          "match": "^([\\.\\*\\+]).*",
-          "name": "comment.line.dbc"
-        },
+          "name": "comment.line.dbc",
+          "begin": "^[\\.\\*\\+]",
+          "end": "(?<!^)$\\n"
+        }
+      ]
+    },
+    "eol-comments": {
+      "patterns": [
         {
-          "match": "\\s+(\\.).*",
-          "name": "comment.line.empty.dbc"
+          "begin": "[ \\t]+[\\.\\*\\+]",
+          "name": "comment.line.dbc",
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        }
+      ]
+    },
+    "eol-comments-catchall": {
+      "patterns": [
+        {
+          "begin": "[ \\t]+*",
+          "name": "comment.line.dbc",
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
         }
       ]
     },
@@ -216,170 +80,309 @@
         }
       ]
     },
-    "all-types": {
+    "flag-constants": {
       "patterns": [
         {
-          "include": "#primative-types"
-        },
-        {
-          "include": "#flags"
-        },
-        {
-          "include": "#verb-types"
+          "match": "((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\\$\\.@])",
+          "name": "constant.language.dbc"
         }
       ]
     },
-    "flags": {
+    "number-constants": {
       "patterns": [
         {
-          "match": "(?<!\\w|\\.|\\$)(EOS|OVER|EQUAL|LESS|NULL)(?!\\w|\\.|\\$|=)",
-          "name": "storage.type.flags.dbc"
-        },
-        {
-          "match": "\\s+(DEBUG)\\s+",
-          "name": "storage.type.flags.dbc"
+          "match": "(-)?(([0-9]+\\.[0-9]+)|(\\.[0-9]+)|([0-9]+))(?![[:alnum:]_\\$\\.@])",
+          "name": "constant.numeric.dbc"
         }
       ]
     },
-    "expressions": {
+    "operand-seperators": {
       "patterns": [
         {
-          "begin": "\\(",
-          "beginCaptures": {
-            "0": {
-              "name": "keyword.operator.dbc"
-            }
-          },
-          "end": "\\)",
-          "endCaptures": {
-            "0": {
-              "name": "keyword.operator.dbc"
-            }
-          },
-          "name": "keyword.operator.dbc",
+          "match": "([ \\t]+((?i)by|to|of|from|using|with|in|into)[ \\t]+|[ \\t]*,)",
+          "name": "support.type.dbc"
+        }
+      ]
+    },
+    "variable-definitions": {
+      "patterns": [
+        {
+          "include": "#standard-types"
+        },
+        {
+          "include": "#list-types"
+        }
+      ]
+    },
+    "brackets": {
+      "patterns": [
+        {
+          "begin": "\\[",
+          "name": "meta.brackets.dbc",
           "patterns": [
             {
-              "include": "$self"
-            },
-            {
-              "include": "#strings"
-            },
-            {
-              "include": "#dbc-functions"
-            },
-            {
-              "include": "#all-types"
-            },
-            {
-              "include": "#keywords"
-            },
-            {
-              "match": "([A-Z0-9._$@]+)",
-              "name": "variable.parameter.dbc"
+              "include": "#argument"
             }
-          ]
+          ],
+          "end": "\\]"
         }
       ]
     },
-    "verb-types": {
+    "type-definition": {
       "patterns": [
         {
-          "match": "(?<!\\w|\\.|\\$)(CVARLIT|NVARLIT|CVAR|NVAR|CNVARLIT|CNVAR|ANY|VAR|VARLIT)\\b(\\s|,|:)",
-          "captures": {
+          "begin": "([ \\t]+((?i)by|to|of|from|using|with|in|into)[ \\t]+|[ \\t]*,|:\\n)",
+          "beginCaptures": {
             "1": {
-              "name": "storage.type.verb.dbc"
+              "name": "support.type.dbc"
             }
-          }
+          },
+          "name": "meta.storage.define",
+          "patterns": [
+            {
+              "match": "([ \\t]*((?i)initial))",
+              "name": "storage.modifier.dbc"
+            },
+            {
+              "include": "#argument"
+            },
+            {
+              "include": "#operand-seperators"
+            },
+            {
+              "include": "#eol-comments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
         },
         {
-          "match": "(?<!\\w|\\.|\\$)(LABEL|ARRAY|QUEUE|OBJECT)(?!\\w|\\.|\\$|=)",
-          "captures": {
-            "1": {
-              "name": "storage.type.verb.dbc"
-            }
-          }
+          "include": "#number-constants"
         },
         {
-          "match": "(?<!\\w|\\.|\\$)(CARRAY|NVARRAY|NARRAY)[1-3](?!\\w|\\.|\\$|=)",
-          "captures": {
-            "1": {
-              "name": "storage.type.verb.dbc"
-            }
-          }
+          "include": "#argument"
+        },
+        {
+          "include": "#address-types"
+        },
+        {
+          "include": "#prototype"
         }
       ]
     },
-    "primative-types": {
+    "address-types": {
       "patterns": [
         {
-          "match": "\\s(?:CHAR|FORM|EXTERNAL|EQU)\\b",
-          "name": "storage.type.primative.dbc"
-        },
-        {
-          "match": "\\s(LABEL|ARRAY|QUEUE|OBJECT)\\s",
-          "name": "storage.type.primative.dbc"
-        },
-        {
-          "match": "\\s(AFILE|IMAGE|FILE|IFILE|PFILE|DEVICE|RESOURCE|LIST)\\s",
-          "name": "storage.type.primative.dbc"
-        },
-        {
-          "match": "\\s(GCHAR|GFORM)\\s",
-          "name": "storage.type.primative.dbc"
+          "match": "@",
+          "name": "storage.modifier.dbc"
         }
       ]
     },
-    "dbc-functions": {
+    "standard-types": {
       "patterns": [
         {
-          "name": "constant.other.dbc",
-          "match": "\\b(CHOP|SQUEEZE|TRIM|MOD)\\s+"
+          "include": "#constant-types"
         },
         {
-          "match": "^\\s+(SWITCH|MOVE|FILL|APPEND|CMOVE|MOVEFPTR|MOVELPTR|BUMP|LENSET|REPLACE|REP|SETLPTR|SETFPTR|ADD|SUB|MULT|DIVIDE|SEARCH|SCAN|MATCH|TYPE|FLAGREST|ENDSET|PAUSE|TRAPCLR|TRAPSET|TRAPREST|NORETURN|SHUTDOWN|CLOCK|RETCOUNT|TESTADR|MOVEADR|MOVEVL|TESTLABEL|MOVELABEL|CLOSE|PREP|READ|OPEN|ERASE|ROLLOUT|REPOSIT|LOADMOD|UNLOAD|PRINT|UPDATE|FPOSIT|UNPACK)\\s+([A-Z0-9._$@]+(?!\\w|\\.|\\$|=))?",
-          "captures": {
+          "include": "#character-types"
+        },
+        {
+          "include": "#numeric-types"
+        },
+        {
+          "include": "#var-types"
+        }
+      ]
+    },
+    "constant-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)define|equ)[ \\t]+",
+          "beginCaptures": {
             "1": {
-              "name": "keyword.operator.dbc"
+              "name": "entity.name.type.constant.dbc"
             },
             "2": {
-              "name": "variable.parameter.dbc"
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.constant.dbc",
+          "patterns": [
+            {
+              "include": "#number-constants"
+            },
+            {
+              "include": "#argument"
+            },
+            {
+              "include": "#eol-comments-catchall"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "character-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)char|dim|init|gchar)[ \\t]+",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.char.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.char.dbc",
+          "patterns": [
+            {
+              "include": "#brackets"
+            },
+            {
+              "include": "#type-definition"
+            },
+            {
+              "include": "#eol-comments-catchall"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "numeric-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)form|num|int|float|gform|gnum)[ \\t]+",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.form.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.form.dbc",
+          "patterns": [
+            {
+              "include": "#brackets"
+            },
+            {
+              "include": "#type-definition"
+            },
+            {
+              "include": "#eol-comments-catchall"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "var-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)var)[ \\t]+",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.var.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.var.dbc",
+          "patterns": [
+            {
+              "include": "#brackets"
+            },
+            {
+              "include": "#type-definition"
+            },
+            {
+              "include": "#eol-comments-catchall"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "list-types": {
+      "patterns": [
+        {
+          "match": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)list)[ \\t]+(@)",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.list.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            },
+            "3": {
+              "name": "storage.modifier.dbc"
             }
           }
         },
         {
-          "name": "keyword.operator.dbc",
-          "match": "^\\s+(SETFLAG|DISPLAY|SCRNSAVE|SCRNREST|DSPFNC|STATESAVE|STATEREST|PACK|LOAD|PACKLEN|STORE|CLEAR|SET|RESET|FLAGSAVE|CLEARADR|TRAPSAVE|TRAP|CLEARLABEL|GETPARM|SETVAR|SETVAR\\.YN|WRITE|SETNVAR|SETCVAR)\\s+"
-        },
-        {
-          "name": "constant.other.dbc",
-          "match": "^\\s+#(IFDEF|IFNDEF|ENDIF|IFLABEL|IFNLABEL)(?!\\w|\\.|\\$|=)"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(TSTAMP|DATE|TIME|ELAPSED|MESSAGE)\\b"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(LMOD|ULMOD)\\s+"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(NOBLANK|NOZERO)\\s+"
-        },
-        {
-          "name": "support.function.dbc",
-          "match": "^\\s+(RETURN.EOS|RETURN.NOTEOS)\\s+"
-        },
-        {
-          "name": "entity.name.function.dbc",
-          "match": "^\\s+([A-Z0-9._$@]+(?!\\w|\\.|\\$|=))\\s+"
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)list)",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.list.dbc"
+            },
+            "2": {
+              "name": "storage.modifier.dbc"
+            }
+          },
+          "name": "meta.list.dbc",
+          "patterns": [
+            {
+              "include": "#standard-types"
+            },
+            {
+              "include": "#prototype"
+            }
+          ],
+          "end": "^[ \\t]+((?i)listend)(([ \\t]*\\n)|([ \\t]+.*\\n))",
+          "endCaptures": {
+            "1": {
+              "name": "storage.modifier.dbc"
+            },
+            "4": {
+              "name": "comment.line.dbc"
+            }
+          }
         }
       ]
     },
-    "functions": {
+    "argument": {
       "patterns": [
         {
-          "include": "#dbc-functions"
+          "match": "~([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
+          "name": "variable.function.dbc"
+        },
+        {
+          "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)(\\=)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.dbc"
+            },
+            "2": {
+              "name": "keyword operator.assignment.dbc"
+            }
+          }
+        },
+        {
+          "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
+          "name": "variable.other.dbc",
+          "patterns": [
+            {
+              "include": "#brackets"
+            }
+          ]
+        },
+        {
+          "include": "#number-constants"
+        },
+        {
+          "include": "#prototype"
         }
       ]
     }
