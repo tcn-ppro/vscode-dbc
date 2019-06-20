@@ -110,7 +110,16 @@
           "include": "#standard-types"
         },
         {
+          "include": "#label-types"
+        },
+        {
           "include": "#list-types"
+        },
+        {
+          "include": "#file-types"
+        },
+        {
+          "include": "#varlist-types"
         }
       ]
     },
@@ -121,7 +130,7 @@
           "name": "meta.brackets.dbc",
           "patterns": [
             {
-              "include": "#argument"
+              "include": "#arguments"
             }
           ],
           "end": "\\]"
@@ -144,10 +153,7 @@
               "name": "storage.modifier.dbc"
             },
             {
-              "include": "#argument"
-            },
-            {
-              "include": "#operand-seperators"
+              "include": "#arguments"
             },
             {
               "include": "#eol-comments"
@@ -156,16 +162,10 @@
           "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
         },
         {
-          "include": "#number-constants"
-        },
-        {
-          "include": "#argument"
-        },
-        {
           "include": "#address-types"
         },
         {
-          "include": "#prototype"
+          "include": "#arguments"
         }
       ]
     },
@@ -211,7 +211,7 @@
               "include": "#number-constants"
             },
             {
-              "include": "#argument"
+              "include": "#arguments"
             },
             {
               "include": "#eol-comments-catchall"
@@ -305,6 +305,34 @@
         }
       ]
     },
+    "label-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)external|label)[ \\t]*",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.function.var.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.function.dbc",
+          "patterns": [
+            {
+              "include": "#brackets"
+            },
+            {
+              "include": "#type-definition"
+            },
+            {
+              "include": "#eol-comments-catchall"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
     "list-types": {
       "patterns": [
         {
@@ -349,6 +377,84 @@
               "name": "comment.line.dbc"
             }
           }
+        }
+      ]
+    },
+    "file-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)file|ifile|afile|pfile|comfile)[ \\t]*",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.interface.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.interface.dbc",
+          "patterns": [
+            {
+              "include": "#address-types"
+            },
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "varlist-types": {
+      "patterns": [
+        {
+          "begin": "^([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]+((?i)varlist)[ \\t]*",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.varlist.dbc"
+            },
+            "2": {
+              "name": "storage.type.dbc"
+            }
+          },
+          "name": "meta.storage.varlist.dbc",
+          "patterns": [
+            {
+              "include": "#address-types"
+            },
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
+    },
+    "arguments": {
+      "patterns": [
+        {
+          "begin": "([ \\t]*:\\n)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.type.dbc"
+            }
+          },
+          "name": "meta.arguments.dbc",
+          "patterns": [
+            {
+              "include": "#argument"
+            },
+            {
+              "include": "#operand-seperators"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        },
+        {
+          "include": "#argument"
+        },
+        {
+          "include": "#operand-seperators"
         }
       ]
     },

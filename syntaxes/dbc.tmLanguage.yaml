@@ -74,7 +74,10 @@ repository:
   variable-definitions:
     patterns:
     - include: '#standard-types'
+    - include: '#label-types'
     - include: '#list-types'
+    - include: '#file-types'
+    - include: '#varlist-types'
 
   # Array brackets
   brackets:
@@ -82,7 +85,7 @@ repository:
     - begin: '\['
       name: meta.brackets.dbc
       patterns:
-      - include: '#argument'
+      - include: '#arguments'
       end: '\]'
 
   # Define a variable on definition
@@ -95,14 +98,11 @@ repository:
       patterns:
       - match: '([ \t]*((?i)initial))'
         name: storage.modifier.dbc
-      - include: '#argument'
-      - include: '#operand-seperators'
+      - include: '#arguments'
       - include: '#eol-comments'
       end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-    - include: '#number-constants'
-    - include: '#argument'
     - include: '#address-types'
-    - include: '#prototype'
+    - include: '#arguments'
 
   address-types:
     patterns:
@@ -127,7 +127,7 @@ repository:
       name: meta.storage.constant.dbc
       patterns:
       - include: '#number-constants'
-      - include: "#argument"
+      - include: "#arguments"
       - include: '#eol-comments-catchall'
       end: '(?<!^)(?<!:)(?<!\n)\n'
 
@@ -173,6 +173,21 @@ repository:
       - include: '#eol-comments-catchall'
       end: '(?<!^)(?<!:)(?<!\n)\n'
 
+
+  # VARIABLE DEFINITIONS (LABELS)
+  label-types:
+    patterns:
+    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)external|label)[ \t]*'
+      beginCaptures:
+        1: { name: entity.name.function.var.dbc }
+        2: { name: storage.type.dbc }
+      name: meta.storage.function.dbc
+      patterns:
+      - include: '#brackets'
+      - include: '#type-definition'
+      - include: '#eol-comments-catchall'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+
   # VARIABLE DEFINITIONS (LIST)
   list-types:
     patterns:
@@ -194,9 +209,49 @@ repository:
         1: { name: storage.modifier.dbc }
         4: { name: comment.line.dbc }
   
+  # VARIABLE DEFINITIONS (FILES)
+  file-types:
+    patterns:
+    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)file|ifile|afile|pfile|comfile)[ \t]*'
+      beginCaptures:
+        1: { name: entity.name.interface.dbc }
+        2: { name: storage.type.dbc }
+      name: meta.storage.interface.dbc
+      patterns:
+      - include: '#address-types'
+      - include: '#arguments'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+
+  # VARIABLE DEFINITIONS (VARLIST)
+  varlist-types:
+    patterns:
+    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)varlist)[ \t]*'
+      beginCaptures:
+        1: { name: entity.name.type.varlist.dbc }
+        2: { name: storage.type.dbc }
+      name: meta.storage.varlist.dbc
+      patterns:
+      - include: '#address-types'
+      - include: '#arguments'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
 
 
 # STATEMENTS
+
+  # Multiple arguments with multiline support
+  arguments:
+    patterns:
+    - begin: '([ \t]*:\n)'
+      beginCaptures:
+        1: { name: support.type.dbc }
+      name: meta.arguments.dbc
+      patterns:
+      - include: '#argument'
+      - include: '#operand-seperators'
+      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+    - include: '#argument'
+    - include: '#operand-seperators'
+    
   
   # Any single parameters/inputs
   argument:
@@ -213,6 +268,7 @@ repository:
       - include: '#brackets'
     - include: '#number-constants'
     - include: '#prototype'
+
 
 
 
