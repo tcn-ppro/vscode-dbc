@@ -32,7 +32,15 @@
                 "scopeName": "source.dbc",
                 "path": "./syntaxes/dbc.tmLanguage.json"
             }
-        ]
+        ],
+        "configurationDefaults": {
+            "[dbc]": {
+              "files.encoding": "cp850",
+              "editor.tabSize": 5,
+              "editor.detectIndentation": false,
+              "editor.insertSpaces": false
+            }
+          }
     },
     "devDependencies": {
         "js-yaml": "^3.13.1"
