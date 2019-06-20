@@ -42,7 +42,7 @@ repository:
       beginCaptures:
         '0':
           name: punctuation.definition.string.begin.dbc
-      end: '"'
+      end: '["\n]'
       endCaptures:
         '0':
           name: punctuation.definition.string.end.dbc
@@ -55,20 +55,36 @@ repository:
   # Flags
   flag-constants:
     patterns:
-    - match: '((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\$\.@])'
-      name: constant.language.dbc
+    - match: '[ \t]*((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\$\.@])'
+      captures: 
+        1: { name: constant.language.dbc }
 
   # Numbers
   number-constants:
     patterns:
-    - match: '(-)?(([0-9]+\.[0-9]+)|(\.[0-9]+)|([0-9]+))(?![[:alnum:]_\$\.@])'
-      name: constant.numeric.dbc
+    - match: '[ \t]*((-)?(([0-9]+\.[0-9]+)|(\.[0-9]+)|([0-9]+))(?![[:alnum:]_\$\.@]))'
+      captures: 
+        1: { name: constant.numeric.dbc }
+
+  # Operand Arithmetics
+  operand-arithmetic:
+    patterns: 
+    - match: '[ \t]*(\+|-|/|%|\||\^|~|!|\*)'
+      captures: 
+        1: { name: keyword.operator.arithmetic.dbc }
 
   # Operand Seperators
   operand-seperators:
     patterns:
     - match: '([ \t]+((?i)by|to|of|from|using|with|in|into)[ \t]+|[ \t]*,)'
-      name: support.type.dbc
+      captures: 
+        2: { name: support.type.dbc }
+
+  # Operand Alter Types
+  operand-altertype:
+    patterns: 
+    - match: '((?i)(sqznum|form|char|squeeze|trim|size|length|chop))'
+      name: support.function.builtin.dbc
 
 # VARIABLES DEFINITIONS
   variable-definitions:
@@ -252,7 +268,6 @@ repository:
     - include: '#argument'
     - include: '#operand-seperators'
     
-  
   # Any single parameters/inputs
   argument:
     patterns:
@@ -267,7 +282,26 @@ repository:
       patterns:
       - include: '#brackets'
     - include: '#number-constants'
+    - include: "#argument-parens"
     - include: '#prototype'
+
+
+  # Parentheses parameters
+  argument-parens:
+    patterns:
+      - begin: '\('
+        beginCaptures:
+          1: { name: punctuation.section.parentheses.begin.dbc }
+        name: meta.argument.parens.dbc
+        patterns:
+        - include: '#operand-arithmetic'
+        - include: '#operand-altertype'
+        - include: '([ \t]*:\n)'
+          name: support.type.dbc
+        - include: '#argument'
+        end: '\)'
+        endCaptures:
+          1: { name: punctuation.section.parentheses.end.dbc }
 
 
 

@@ -64,7 +64,7 @@
               "name": "punctuation.definition.string.begin.dbc"
             }
           },
-          "end": "\"",
+          "end": "[\"\\n]",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.string.end.dbc"
@@ -83,16 +83,36 @@
     "flag-constants": {
       "patterns": [
         {
-          "match": "((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\\$\\.@])",
-          "name": "constant.language.dbc"
+          "match": "[ \\t]*((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\\$\\.@])",
+          "captures": {
+            "1": {
+              "name": "constant.language.dbc"
+            }
+          }
         }
       ]
     },
     "number-constants": {
       "patterns": [
         {
-          "match": "(-)?(([0-9]+\\.[0-9]+)|(\\.[0-9]+)|([0-9]+))(?![[:alnum:]_\\$\\.@])",
-          "name": "constant.numeric.dbc"
+          "match": "[ \\t]*((-)?(([0-9]+\\.[0-9]+)|(\\.[0-9]+)|([0-9]+))(?![[:alnum:]_\\$\\.@]))",
+          "captures": {
+            "1": {
+              "name": "constant.numeric.dbc"
+            }
+          }
+        }
+      ]
+    },
+    "operand-arithmetic": {
+      "patterns": [
+        {
+          "match": "[ \\t]*(\\+|-|/|%|\\||\\^|~|!|\\*)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.arithmetic.dbc"
+            }
+          }
         }
       ]
     },
@@ -100,7 +120,19 @@
       "patterns": [
         {
           "match": "([ \\t]+((?i)by|to|of|from|using|with|in|into)[ \\t]+|[ \\t]*,)",
-          "name": "support.type.dbc"
+          "captures": {
+            "2": {
+              "name": "support.type.dbc"
+            }
+          }
+        }
+      ]
+    },
+    "operand-altertype": {
+      "patterns": [
+        {
+          "match": "((?i)(sqznum|form|char|squeeze|trim|size|length|chop))",
+          "name": "support.function.builtin.dbc"
         }
       ]
     },
@@ -488,7 +520,44 @@
           "include": "#number-constants"
         },
         {
+          "include": "#argument-parens"
+        },
+        {
           "include": "#prototype"
+        }
+      ]
+    },
+    "argument-parens": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.section.parentheses.begin.dbc"
+            }
+          },
+          "name": "meta.argument.parens.dbc",
+          "patterns": [
+            {
+              "include": "#operand-arithmetic"
+            },
+            {
+              "include": "#operand-altertype"
+            },
+            {
+              "include": "([ \\t]*:\\n)",
+              "name": "support.type.dbc"
+            },
+            {
+              "include": "#argument"
+            }
+          ],
+          "end": "\\)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.parentheses.end.dbc"
+            }
+          }
         }
       ]
     }
