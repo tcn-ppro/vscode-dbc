@@ -13,6 +13,13 @@ repository:
   main:
     patterns:
     - include: '#variable-definitions'
+    - include: '#verb-definition'
+    # - include: '#routine-definition'
+    # - include: '#label-definition'
+    # - include: '#variable-definitions'
+    # - include: '#invalid-keywords'
+    # - include: '#debug'
+    # - include: '#statements'
 
 # COMMENTS
   # Comments begin with a [# .] and finish at the end of the line
@@ -78,7 +85,7 @@ repository:
     patterns:
     - match: '([ \t]+((?i)by|to|of|from|using|with|in|into)[ \t]+|[ \t]*,)'
       captures: 
-        2: { name: support.type.dbc }
+        1: { name: support.type.dbc }
 
   # Operand Alter Types
   operand-altertype:
@@ -251,6 +258,45 @@ repository:
       - include: '#arguments'
       end: '(?<!^)(?<!:)(?<!\n)\n'
 
+# VERB DEFINITION
+  verb-definition:
+    patterns:
+    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)verb)[ \t]*'
+      beginCaptures:
+        1: { name: entity.name.function.verb.dbc }
+        2: { name: storage.type.verb.dbc }
+      name: meta.function.parameters.dbc
+      patterns:
+      - include: '#verb-definition-parameters'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+
+  verb-definition-parameters:
+    patterns:
+    - begin: '([ \t]*:\n)'
+      beginCaptures:
+        1: { name: support.type.dbc }
+      patterns:
+      - include: '#verb-definition-param'
+      - include: '#operand-seperators'
+      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+    - include: '#verb-definition-param'
+    - include: '#operand-seperators'
+
+  verb-definition-param:
+    patterns:
+    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)*([\#\=])\b((?i)(array|afile|any|carray|carray1|carray2|carray3|cnvar|cnvarlit|comfile|cvar|cvarlit|device|file|ifile|image|list|label|nvar|nvarlit|varlit)\b)'
+      captures: 
+        1: { name: variable.parameter.dbc }
+        2: { name: keyword operator.assignment.dbc }
+        3: { name: support.type.dbc }
+    - include: '#prototype'
+
+
+# ROUTINE DEFINITION
+
+# LABEL DEFINITION
+
+# DEBUG
 
 # STATEMENTS
 
@@ -260,7 +306,6 @@ repository:
     - begin: '([ \t]*:\n)'
       beginCaptures:
         1: { name: support.type.dbc }
-      name: meta.arguments.dbc
       patterns:
       - include: '#argument'
       - include: '#operand-seperators'
