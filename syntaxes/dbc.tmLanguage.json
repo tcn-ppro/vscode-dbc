@@ -216,7 +216,7 @@
               "include": "#arguments"
             }
           ],
-          "end": "\\]"
+          "end": "(\\]|(?<!^)(?<!:)(?<!\\n)(?=\\n))"
         }
       ]
     },
@@ -319,9 +319,6 @@
           "name": "meta.storage.char.dbc",
           "patterns": [
             {
-              "include": "#brackets"
-            },
-            {
               "include": "#type-definition"
             },
             {
@@ -346,9 +343,6 @@
           },
           "name": "meta.storage.form.dbc",
           "patterns": [
-            {
-              "include": "#brackets"
-            },
             {
               "include": "#type-definition"
             },
@@ -375,9 +369,6 @@
           "name": "meta.storage.var.dbc",
           "patterns": [
             {
-              "include": "#brackets"
-            },
-            {
               "include": "#type-definition"
             },
             {
@@ -402,9 +393,6 @@
           },
           "name": "meta.storage.function.dbc",
           "patterns": [
-            {
-              "include": "#brackets"
-            },
             {
               "include": "#type-definition"
             },
@@ -692,6 +680,9 @@
         },
         {
           "include": "#loop-keywords"
+        },
+        {
+          "include": "#switch-keywords"
         }
       ]
     },
@@ -747,12 +738,10 @@
         },
         {
           "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
-          "name": "variable.other.dbc",
-          "patterns": [
-            {
-              "include": "#brackets"
-            }
-          ]
+          "name": "variable.other.dbc"
+        },
+        {
+          "include": "#brackets"
         },
         {
           "include": "#argument-parens"
@@ -934,6 +923,7 @@
               "name": "keyword.control.dbc"
             }
           },
+          "name": "meta.loop.parameters.dbc",
           "patterns": [
             {
               "include": "#arguments"
@@ -944,7 +934,34 @@
       ]
     },
     "switch-keywords": {
-      "patterns": null
+      "patterns": [
+        {
+          "begin": "^[ \\t]+((?i)switch|case)(?![[:alnum:]_\\$\\.@])[ \\t]*",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "name": "meta.switch.parameters.dbc",
+          "patterns": [
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        },
+        {
+          "match": "^[ \\t]+((?i)endswitch)(([ \\t]*\\n)|([ \\t]+.*\\n))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "4": {
+              "name": "comment.line.dbc"
+            }
+          }
+        }
+      ]
     },
     "function-keywords": {
       "patterns": null
