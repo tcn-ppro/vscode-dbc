@@ -37,6 +37,12 @@
         },
         {
           "include": "#debug"
+        },
+        {
+          "include": "#compiler-directive"
+        },
+        {
+          "include": "#file-includes"
         }
       ]
     },
@@ -145,6 +151,44 @@
         {
           "match": "((?i)(sqznum|form|char|squeeze|trim|size|length|chop))",
           "name": "support.function.builtin.dbc"
+        }
+      ]
+    },
+    "compiler-directive": {
+      "patterns": [
+        {
+          "match": "^[ \\t]+(\\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.import.if.dbc"
+            },
+            "2": {
+              "name": "variable.other.dbc"
+            }
+          }
+        },
+        {
+          "match": "^[ \\t]+(\\#(?i)endif)(([ \\t]*\\n)|([ \\t]+.*\\n))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.import.if.dbc"
+            },
+            "4": {
+              "name": "comment.line.dbc"
+            }
+          }
+        }
+      ]
+    },
+    "file-includes": {
+      "patterns": [
+        {
+          "match": "^[ \\t]+((?i)inc)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]*\\n",
+          "captures": {
+            "1": {
+              "name": "support.function.builtin.dbc"
+            }
+          }
         }
       ]
     },
@@ -642,6 +686,9 @@
           }
         }
       ]
+    },
+    "statements": {
+      "patterns": null
     },
     "arguments": {
       "patterns": [

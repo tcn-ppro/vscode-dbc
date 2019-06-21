@@ -17,6 +17,8 @@ repository:
     - include: '#label-definition'
     - include: '#variable-definitions'
     - include: '#debug'
+    - include: '#compiler-directive'
+    - include: '#file-includes'
     # - include: '#statements'
 
 # COMMENTS
@@ -90,6 +92,27 @@ repository:
     patterns: 
     - match: '((?i)(sqznum|form|char|squeeze|trim|size|length|chop))'
       name: support.function.builtin.dbc
+
+
+# COMPILER DIRECTIVE
+  compiler-directive:
+    patterns:
+    - match: '^[ \t]+(\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+      captures:
+        1: { name: 'keyword.control.import.if.dbc' }
+        2: { name: 'variable.other.dbc' }
+    - match: '^[ \t]+(\#(?i)endif)(([ \t]*\n)|([ \t]+.*\n))'
+      captures:
+        1: { name: 'keyword.control.import.if.dbc' }
+        4: { name: comment.line.dbc }
+
+# FILE INCLUDES
+  file-includes:
+    patterns:
+    - match: '^[ \t]+((?i)inc)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*\n'
+      captures:
+        1: { name: 'support.function.builtin.dbc' }
+
 
 # VARIABLES DEFINITIONS
   variable-definitions:
@@ -342,6 +365,17 @@ repository:
 
 # STATEMENTS
 
+  statements:
+    patterns:
+    # - include: '#chain-to'
+    # - include: '#if-keyword'
+    # - include: '#loop-keyword'
+    # - include: '#for-keyword'
+    # - include: '#switch-keyword'
+    # - include: '#function-keywords'
+    # - include: '#support-functions'
+    # - include: '#verb-call'
+
   # Multiple arguments with multiline support
   arguments:
     patterns:
@@ -389,7 +423,5 @@ repository:
         end: '\)'
         endCaptures:
           1: { name: punctuation.section.parentheses.end.dbc }
-
-
 
 
