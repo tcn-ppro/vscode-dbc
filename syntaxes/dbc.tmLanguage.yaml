@@ -246,7 +246,7 @@ repository:
       beginCaptures:
         1: { name: entity.name.type.list.dbc }
         2: { name: storage.modifier.dbc }
-      name: meta.list.dbc
+      name: meta.storage.list.dbc
       patterns:
       - include: '#standard-types'
       - include: '#prototype'
@@ -370,10 +370,9 @@ repository:
   statements:
     patterns:
     - include: '#chain-to'
-    - include: '#if-keyword'
-    # - include: '#loop-keyword'
-    # - include: '#for-keyword'
-    # - include: '#switch-keyword'
+    - include: '#if-keywords'
+    - include: '#loop-keywords'
+    # - include: '#switch-keywords'
     # - include: '#function-keywords'
     # - include: '#support-functions'
     # - include: '#verb-call'
@@ -385,11 +384,11 @@ repository:
       beginCaptures:
         1: { name: support.type.dbc }
       patterns:
-      - include: '#argument'
       - include: '#operand-seperators'
+      - include: '#argument'
       end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-    - include: '#argument'
     - include: '#operand-seperators'
+    - include: '#argument'
     
   # Any single argument
   argument:
@@ -428,6 +427,18 @@ repository:
         endCaptures:
           1: { name: punctuation.section.parentheses.end.dbc }
 
+  # If statement after another statement
+  if-keyword-after:
+    patterns:
+      - begin: '((?i)if(?![[:alnum:]_\$\.@]))'
+        beginCaptures:
+          1: { name: keyword.control.dbc }
+        name: meta.if.paramters
+        patterns:
+        - include: '#if-keyword-parameters'
+        end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+
+
   # STATEMENTS (CHAIN TO)
   chain-to:
     patterns:
@@ -441,15 +452,17 @@ repository:
       end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
 
   # STATEMENTS (IF KEYWORD)
-  if-keyword:
+  if-keywords:
     patterns: 
     - begin: '^[ \t]+((?i)else[ \t]+)?((?i)if(?![[:alnum:]_\$\.@]))'
       beginCaptures:
         1: { name: keyword.control.dbc }
         2: { name: keyword.control.dbc }
+
+      name: meta.if.parameters
       patterns:
         - include: '#if-keyword-parameters'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
   
     - match: '^[ \t]+((?i)else)(([ \t]*\n))'
       captures:
@@ -468,16 +481,30 @@ repository:
     - include: '#argument-parens'
     - include: '#prototype'
 
-  # STATEMENTS (LOOP KEYWORD)
-  loop-keyword:
+  # STATEMENTS (LOOP KEYWORDS)
+  loop-keywords:
     patterns:
-
-  # STATEMENTS (FOR KEYWORD)
-  for-keyword:
-    patterns:
+      # Loop/repeat
+      - match: '^[ \t]+((?i)loop|repeat)([ \t]*\n)'
+        captures:
+          1: { name: keyword.control.dbc }
+      # Break/continue
+      - begin: '^[ \t]+((?i)break|continue)(?![[:alnum:]_\$\.@])[ \t]*'
+        captures:
+          1: { name: keyword.control.dbc }
+        patterns:
+        - include: '#if-keyword-after'
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # For
+      - begin: '^[ \t]+((?i)for)(?![[:alnum:]_\$\.@])[ \t]*'
+        beginCaptures:
+          1: { name: keyword.control.dbc }
+        patterns:
+        - include: '#arguments'
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # STATEMENTS (SWITCH KEYWORD)
-  switch-keyword:
+  switch-keywords:
     patterns:
 
   # STATEMENTS (FUNCTION KEYWORDS)

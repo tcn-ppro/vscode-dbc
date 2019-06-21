@@ -442,7 +442,7 @@
               "name": "storage.modifier.dbc"
             }
           },
-          "name": "meta.list.dbc",
+          "name": "meta.storage.list.dbc",
           "patterns": [
             {
               "include": "#standard-types"
@@ -688,7 +688,10 @@
           "include": "#chain-to"
         },
         {
-          "include": "#if-keyword"
+          "include": "#if-keywords"
+        },
+        {
+          "include": "#loop-keywords"
         }
       ]
     },
@@ -703,19 +706,19 @@
           },
           "patterns": [
             {
-              "include": "#argument"
+              "include": "#operand-seperators"
             },
             {
-              "include": "#operand-seperators"
+              "include": "#argument"
             }
           ],
           "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
         },
         {
-          "include": "#argument"
+          "include": "#operand-seperators"
         },
         {
-          "include": "#operand-seperators"
+          "include": "#argument"
         }
       ]
     },
@@ -796,6 +799,25 @@
         }
       ]
     },
+    "if-keyword-after": {
+      "patterns": [
+        {
+          "begin": "((?i)if(?![[:alnum:]_\\$\\.@]))",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "name": "meta.if.paramters",
+          "patterns": [
+            {
+              "include": "#if-keyword-parameters"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        }
+      ]
+    },
     "chain-to": {
       "patterns": [
         {
@@ -820,7 +842,7 @@
         }
       ]
     },
-    "if-keyword": {
+    "if-keywords": {
       "patterns": [
         {
           "begin": "^[ \\t]+((?i)else[ \\t]+)?((?i)if(?![[:alnum:]_\\$\\.@]))",
@@ -832,12 +854,13 @@
               "name": "keyword.control.dbc"
             }
           },
+          "name": "meta.if.parameters",
           "patterns": [
             {
               "include": "#if-keyword-parameters"
             }
           ],
-          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
         },
         {
           "match": "^[ \\t]+((?i)else)(([ \\t]*\\n))",
@@ -880,13 +903,47 @@
         }
       ]
     },
-    "loop-keyword": {
-      "patterns": null
+    "loop-keywords": {
+      "patterns": [
+        {
+          "match": "^[ \\t]+((?i)loop|repeat)([ \\t]*\\n)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          }
+        },
+        {
+          "begin": "^[ \\t]+((?i)break|continue)(?![[:alnum:]_\\$\\.@])[ \\t]*",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#if-keyword-after"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        },
+        {
+          "begin": "^[ \\t]+((?i)for)(?![[:alnum:]_\\$\\.@])[ \\t]*",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
     },
-    "for-keyword": {
-      "patterns": null
-    },
-    "switch-keyword": {
+    "switch-keywords": {
       "patterns": null
     },
     "function-keywords": {
