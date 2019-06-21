@@ -43,6 +43,9 @@
         },
         {
           "include": "#file-includes"
+        },
+        {
+          "include": "#statements"
         }
       ]
     },
@@ -98,66 +101,58 @@
         }
       ]
     },
-    "flag-constants": {
+    "constant-flags": {
       "patterns": [
         {
-          "match": "[ \\t]*((?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\\$\\.@])",
-          "captures": {
-            "1": {
-              "name": "constant.language.dbc"
-            }
-          }
+          "match": "((?<![[:alnum:]_\\$\\.@])(?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\\$\\.@])",
+          "name": "constant.language.dbc"
         }
       ]
     },
-    "number-constants": {
+    "constant-numbers": {
       "patterns": [
         {
-          "match": "[ \\t]*((-)?(([0-9]+\\.[0-9]+)|(\\.[0-9]+)|([0-9]+))(?![[:alnum:]_\\$\\.@]))",
-          "captures": {
-            "1": {
-              "name": "constant.numeric.dbc"
-            }
-          }
+          "match": "((?<![[:alnum:]_\\$\\.@])(-)?(([0-9]+\\.[0-9]+)|(\\.[0-9]+)|([0-9]+))(?![[:alnum:]_\\$\\.@]))",
+          "name": "constant.numeric.dbc"
         }
       ]
     },
     "operand-arithmetic": {
       "patterns": [
         {
-          "match": "[ \\t]*(\\+|-|/|%|\\||\\^|~|!|\\*)",
-          "captures": {
-            "1": {
-              "name": "keyword.operator.arithmetic.dbc"
-            }
-          }
+          "match": "(\\+|-|/|%|\\||\\^|~|!|\\*)",
+          "name": "keyword.operator.arithmetic.dbc"
         }
       ]
     },
     "operand-seperators": {
       "patterns": [
         {
-          "match": "([ \\t]+((?i)by|to|of|from|using|with|in|into)[ \\t]+|[ \\t]*,)",
-          "captures": {
-            "1": {
-              "name": "support.type.dbc"
-            }
-          }
+          "match": "((?<![[:alnum:]_\\$\\.@])((?i)by|to|of|from|using|with|in|into)[ \\t]+|,)",
+          "name": "support.type.dbc"
         }
       ]
     },
     "operand-altertype": {
       "patterns": [
         {
-          "match": "((?i)(sqznum|form|char|squeeze|trim|size|length|chop))",
+          "match": "((?<![[:alnum:]_\\$\\.@])(?i)(sqznum|form|char|squeeze|trim|size|length|chop)(?![[:alnum:]_\\$\\.@]))",
           "name": "support.function.builtin.dbc"
+        }
+      ]
+    },
+    "operand-comparators": {
+      "patterns": [
+        {
+          "match": "((?<![[:alnum:]_\\$\\.@])(?i)(and|or|not)(?![[:alnum:]_\\$\\.@]))",
+          "name": "keyword.operator.dbc"
         }
       ]
     },
     "compiler-directive": {
       "patterns": [
         {
-          "match": "^[ \\t]+(\\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
+          "match": "[ \\t]+(\\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
           "captures": {
             "1": {
               "name": "keyword.control.import.if.dbc"
@@ -296,7 +291,7 @@
           "name": "meta.storage.constant.dbc",
           "patterns": [
             {
-              "include": "#number-constants"
+              "include": "#constant-numbers"
             },
             {
               "include": "#arguments"
@@ -688,7 +683,14 @@
       ]
     },
     "statements": {
-      "patterns": null
+      "patterns": [
+        {
+          "include": "#chain-to"
+        },
+        {
+          "include": "#if-keyword"
+        }
+      ]
     },
     "arguments": {
       "patterns": [
@@ -720,6 +722,12 @@
     "argument": {
       "patterns": [
         {
+          "include": "#constant-numbers"
+        },
+        {
+          "include": "#constant-flags"
+        },
+        {
           "match": "~([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
           "name": "variable.function.dbc"
         },
@@ -742,9 +750,6 @@
               "include": "#brackets"
             }
           ]
-        },
-        {
-          "include": "#number-constants"
         },
         {
           "include": "#argument-parens"
@@ -772,14 +777,17 @@
               "include": "#operand-altertype"
             },
             {
-              "include": "([ \\t]*:\\n)",
+              "include": "#operand-comparators"
+            },
+            {
+              "match": "([ \\t]*:\\n)",
               "name": "support.type.dbc"
             },
             {
               "include": "#argument"
             }
           ],
-          "end": "\\)",
+          "end": "(\\)|(?<!^)(?<!:)(?<!\\n)(?=\\n))",
           "endCaptures": {
             "1": {
               "name": "punctuation.section.parentheses.end.dbc"
@@ -787,6 +795,108 @@
           }
         }
       ]
+    },
+    "chain-to": {
+      "patterns": [
+        {
+          "begin": "^[ \\t]+((?i)chain)[ \\t]+",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "2": {
+              "name": "variable.function.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#argument"
+            },
+            {
+              "include": "#prototype"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        }
+      ]
+    },
+    "if-keyword": {
+      "patterns": [
+        {
+          "begin": "^[ \\t]+((?i)else[ \\t]+)?((?i)if(?![[:alnum:]_\\$\\.@]))",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "2": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#if-keyword-parameters"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        },
+        {
+          "match": "^[ \\t]+((?i)else)(([ \\t]*\\n))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          }
+        },
+        {
+          "match": "^[ \\t]+((?i)endif)(([ \\t]*\\n)|([ \\t]+.*\\n))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "4": {
+              "name": "comment.line.dbc"
+            }
+          }
+        }
+      ]
+    },
+    "if-keyword-parameters": {
+      "patterns": [
+        {
+          "match": "([ \\t]*:\\n)",
+          "name": "support.type.dbc"
+        },
+        {
+          "include": "#constant-flags"
+        },
+        {
+          "include": "#operand-comparators"
+        },
+        {
+          "include": "#argument-parens"
+        },
+        {
+          "include": "#prototype"
+        }
+      ]
+    },
+    "loop-keyword": {
+      "patterns": null
+    },
+    "for-keyword": {
+      "patterns": null
+    },
+    "switch-keyword": {
+      "patterns": null
+    },
+    "function-keywords": {
+      "patterns": null
+    },
+    "support-functions": {
+      "patterns": null
+    },
+    "verb-call": {
+      "patterns": null
     }
   }
 }
