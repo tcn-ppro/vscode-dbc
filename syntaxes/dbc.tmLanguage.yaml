@@ -103,7 +103,7 @@ repository:
       captures:
         1: { name: 'keyword.control.import.if.dbc' }
         2: { name: 'variable.other.dbc' }
-    - match: '^[ \t]+(\#(?i)endif)(([ \t]*\n)|([ \t]+.*\n))'
+    - match: '^[ \t]+(\#(?i)endif)(?![[:alnum:]_\$\.@])(([ \t]*\n)|([ \t]+.*\n))'
       captures:
         1: { name: 'keyword.control.import.if.dbc' }
         4: { name: comment.line.dbc }
@@ -220,7 +220,7 @@ repository:
   # VARIABLE DEFINITIONS (LABELS)
   label-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)external|label)[ \t]*'
+    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)label)(?![[:alnum:]_\$\.@])[ \t]*'
       beginCaptures:
         1: { name: entity.name.function.var.dbc }
         2: { name: storage.type.dbc }
@@ -229,6 +229,11 @@ repository:
       - include: '#type-definition'
       - include: '#eol-comments-catchall'
       end: '(?<!^)(?<!:)(?<!\n)\n'
+    # External
+    - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)external)[ \t]*\n'
+      captures:
+        1: { name: entity.name.function.var.dbc }
+        2: { name: storage.type.dbc }
 
   # VARIABLE DEFINITIONS (LIST)
   list-types:
@@ -370,7 +375,7 @@ repository:
     - include: '#loop-keywords'
     - include: '#switch-keywords'
     - include: '#function-keywords'
-    # - include: '#support-functions'
+    - include: '#support-functions'
     # - include: '#verb-call'
 
   # Multiple arguments with multiline support
@@ -528,6 +533,14 @@ repository:
       - include: '#if-keyword-after'
       - include: '#arguments'
       end: '(?<!^)(?<!:)(?<!\n)\n'
+    # Return/Noreturn
+    - begin: '^[ \t]+((?i)return|noreturn)(?![[:alnum:]_\$\.@])[ \t]*'
+      captures:
+        1: { name: keyword.control.dbc }
+      name: meta.function-call.parameters.dbc
+      patterns:
+      - include: '#if-keyword-after'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
     # Goto
     - begin: '^[ \t]+((?i)goto)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
       captures:
@@ -549,6 +562,23 @@ repository:
   # STATEMENTS (SUPPORT FUNCTIONS)
   support-functions:
     patterns:
+    # Setflag
+    - begin: '^[ \t]+((?i)setflag)[ \t]+'
+      captures:
+        1: { name: support.function.builtin.dbc }
+      name: meta.support.parameters.dbc
+      patterns:
+      - include: '#constant-flags'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+    # All others
+    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
+      captures:
+        1: { name: support.function.builtin.dbc }
+      name: meta.support.parameters.dbc
+      patterns:
+      - include: '#arguments'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+
 
   # STATEMENTS (VERB CALL)
   verb-call:
