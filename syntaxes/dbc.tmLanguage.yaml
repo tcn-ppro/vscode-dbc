@@ -369,7 +369,7 @@ repository:
     - include: '#if-keywords'
     - include: '#loop-keywords'
     - include: '#switch-keywords'
-    # - include: '#function-keywords'
+    - include: '#function-keywords'
     # - include: '#support-functions'
     # - include: '#verb-call'
 
@@ -451,8 +451,8 @@ repository:
     patterns: 
     - begin: '^[ \t]+((?i)else[ \t]+)?((?i)if(?![[:alnum:]_\$\.@]))'
       beginCaptures:
-        1: { name: keyword.control.dbc }
-        2: { name: keyword.control.dbc }
+        1: { name: keyword.control.if.dbc }
+        2: { name: keyword.control.if.dbc }
 
       name: meta.if.parameters
       patterns:
@@ -461,10 +461,10 @@ repository:
   
     - match: '^[ \t]+((?i)else)(([ \t]*\n))'
       captures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.if.dbc }
     - match: '^[ \t]+((?i)endif)(([ \t]*\n)|([ \t]+.*\n))'
       captures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.if.dbc }
         4: { name: comment.line.dbc }
 
   if-keyword-parameters:
@@ -482,18 +482,18 @@ repository:
     # Loop/repeat
     - match: '^[ \t]+((?i)loop|repeat)([ \t]*\n)'
       captures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.loop.dbc }
     # Break/continue
     - begin: '^[ \t]+((?i)break|continue)(?![[:alnum:]_\$\.@])[ \t]*'
       captures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.loop.dbc }
       patterns:
       - include: '#if-keyword-after'
       end: '(?<!^)(?<!:)(?<!\n)\n'
     # For
     - begin: '^[ \t]+((?i)for)(?![[:alnum:]_\$\.@])[ \t]*'
       beginCaptures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.loop.dbc }
       name: meta.loop.parameters.dbc
       patterns:
       - include: '#arguments'
@@ -511,13 +511,40 @@ repository:
       end: '(?<!^)(?<!:)(?<!\n)\n'
     - match: '^[ \t]+((?i)endswitch|default)(([ \t]*\n)|([ \t]+.*\n))'
       captures:
-        1: { name: keyword.control.dbc }
+        1: { name: keyword.control.switch.dbc }
         4: { name: comment.line.dbc }
 
 
   # STATEMENTS (FUNCTION KEYWORDS)
   function-keywords:
     patterns:
+    # Call
+    - begin: '^[ \t]+((?i)call)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
+      captures:
+        1: { name: keyword.control.dbc }
+        2: { name: variable.function.dbc }
+      name: meta.function-call.parameters.dbc
+      patterns:
+      - include: '#if-keyword-after'
+      - include: '#arguments'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+    # Goto
+    - begin: '^[ \t]+((?i)goto)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
+      captures:
+        1: { name: keyword.control.dbc }
+        2: { name: variable.function.dbc }
+      name: meta.function-call.parameters.dbc
+      patterns:
+      - include: '#if-keyword-after'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
+    # Branch
+    - begin: '^[ \t]+((?i)branch|perform)[ \t]+'
+      captures:
+        1: { name: keyword.control.dbc }
+      name: meta.function-call.parameters.dbc
+      patterns:
+      - include: '#arguments'
+      end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # STATEMENTS (SUPPORT FUNCTIONS)
   support-functions:

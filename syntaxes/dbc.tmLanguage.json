@@ -683,6 +683,9 @@
         },
         {
           "include": "#switch-keywords"
+        },
+        {
+          "include": "#function-keywords"
         }
       ]
     },
@@ -837,10 +840,10 @@
           "begin": "^[ \\t]+((?i)else[ \\t]+)?((?i)if(?![[:alnum:]_\\$\\.@]))",
           "beginCaptures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.if.dbc"
             },
             "2": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.if.dbc"
             }
           },
           "name": "meta.if.parameters",
@@ -855,7 +858,7 @@
           "match": "^[ \\t]+((?i)else)(([ \\t]*\\n))",
           "captures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.if.dbc"
             }
           }
         },
@@ -863,7 +866,7 @@
           "match": "^[ \\t]+((?i)endif)(([ \\t]*\\n)|([ \\t]+.*\\n))",
           "captures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.if.dbc"
             },
             "4": {
               "name": "comment.line.dbc"
@@ -898,7 +901,7 @@
           "match": "^[ \\t]+((?i)loop|repeat)([ \\t]*\\n)",
           "captures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.loop.dbc"
             }
           }
         },
@@ -906,7 +909,7 @@
           "begin": "^[ \\t]+((?i)break|continue)(?![[:alnum:]_\\$\\.@])[ \\t]*",
           "captures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.loop.dbc"
             }
           },
           "patterns": [
@@ -920,7 +923,7 @@
           "begin": "^[ \\t]+((?i)for)(?![[:alnum:]_\\$\\.@])[ \\t]*",
           "beginCaptures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.loop.dbc"
             }
           },
           "name": "meta.loop.parameters.dbc",
@@ -951,10 +954,10 @@
           "end": "(?<!^)(?<!:)(?<!\\n)\\n"
         },
         {
-          "match": "^[ \\t]+((?i)endswitch)(([ \\t]*\\n)|([ \\t]+.*\\n))",
+          "match": "^[ \\t]+((?i)endswitch|default)(([ \\t]*\\n)|([ \\t]+.*\\n))",
           "captures": {
             "1": {
-              "name": "keyword.control.dbc"
+              "name": "keyword.control.switch.dbc"
             },
             "4": {
               "name": "comment.line.dbc"
@@ -964,7 +967,62 @@
       ]
     },
     "function-keywords": {
-      "patterns": null
+      "patterns": [
+        {
+          "begin": "^[ \\t]+((?i)call)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]*",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "2": {
+              "name": "variable.function.dbc"
+            }
+          },
+          "name": "meta.function-call.parameters.dbc",
+          "patterns": [
+            {
+              "include": "#if-keyword-after"
+            },
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        },
+        {
+          "begin": "^[ \\t]+((?i)goto)[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]*",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            },
+            "2": {
+              "name": "variable.function.dbc"
+            }
+          },
+          "name": "meta.function-call.parameters.dbc",
+          "patterns": [
+            {
+              "include": "#if-keyword-after"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        },
+        {
+          "begin": "^[ \\t]+((?i)branch|perform)[ \\t]+",
+          "captures": {
+            "1": {
+              "name": "keyword.control.dbc"
+            }
+          },
+          "name": "meta.function-call.parameters.dbc",
+          "patterns": [
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
     },
     "support-functions": {
       "patterns": null
