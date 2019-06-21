@@ -700,6 +700,9 @@
         },
         {
           "include": "#support-functions"
+        },
+        {
+          "include": "#verb-call"
         }
       ]
     },
@@ -740,7 +743,7 @@
         },
         {
           "match": "~([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
-          "name": "variable.function.dbc"
+          "name": "meta.function-call.dbc"
         },
         {
           "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)(\\=)",
@@ -833,7 +836,7 @@
               "name": "keyword.control.dbc"
             },
             "2": {
-              "name": "variable.function.dbc"
+              "name": "meta.function-call.dbc"
             }
           },
           "patterns": [
@@ -989,7 +992,7 @@
               "name": "keyword.control.dbc"
             },
             "2": {
-              "name": "variable.function.dbc"
+              "name": "meta.function-call.dbc"
             }
           },
           "name": "meta.function-call.parameters.dbc",
@@ -1025,7 +1028,7 @@
               "name": "keyword.control.dbc"
             },
             "2": {
-              "name": "variable.function.dbc"
+              "name": "meta.function-call.dbc"
             }
           },
           "name": "meta.function-call.parameters.dbc",
@@ -1071,7 +1074,25 @@
           "end": "(?<!^)(?<!:)(?<!\\n)\\n"
         },
         {
-          "begin": "^[ \\t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|traprest|traprestore|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\\$\\.@])[ \\t]*",
+          "begin": "^[ \\t]+((?i)trap)[ \\t]+",
+          "captures": {
+            "1": {
+              "name": "support.function.builtin.dbc"
+            }
+          },
+          "name": "meta.support.parameters.dbc",
+          "patterns": [
+            {
+              "include": "#if-keyword-after"
+            },
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        },
+        {
+          "begin": "^[ \\t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\\$\\.@])[ \\t]*",
           "captures": {
             "1": {
               "name": "support.function.builtin.dbc"
@@ -1088,7 +1109,22 @@
       ]
     },
     "verb-call": {
-      "patterns": null
+      "patterns": [
+        {
+          "begin": "[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]*",
+          "beginCaptures": {
+            "1": {
+              "name": "meta.function-call.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#arguments"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)\\n"
+        }
+      ]
     }
   }
 }
