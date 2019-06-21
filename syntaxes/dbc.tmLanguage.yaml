@@ -81,7 +81,7 @@ repository:
   # Operand Seperators
   operand-seperators:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into)[ \t]+|,)'
+    - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into|using)[ \t]+|,)'
       name: support.type.dbc
 
   # Operand Alter Types
@@ -94,18 +94,18 @@ repository:
   operand-comparators:
     patterns:
     - match: '((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))'
-      name: keyword.operator.dbc
+      name: keyword.operator.comparator.dbc
 
 # COMPILER DIRECTIVE
   compiler-directive:
     patterns:
     - match: '[ \t]+(\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
       captures:
-        1: { name: 'keyword.control.import.if.dbc' }
-        2: { name: 'variable.other.dbc' }
-    - match: '^[ \t]+(\#(?i)endif)(?![[:alnum:]_\$\.@])(([ \t]*\n)|([ \t]+.*\n))'
+        1: { name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc }
+        2: { name: meta.argument.dbc }
+    - match: '^[ \t]+(\#(?i)endif|else)(?![[:alnum:]_\$\.@])(([ \t]*\n)|([ \t]+.*\n))'
       captures:
-        1: { name: 'keyword.control.import.if.dbc' }
+        1: { name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc }
         4: { name: comment.line.dbc }
 
 # FILE INCLUDES
@@ -310,9 +310,9 @@ repository:
     patterns:
     - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)*([\#\=])\b((?i)(array|afile|any|carray|carray1|carray2|carray3|cnvar|cnvarlit|comfile|cvar|cvarlit|device|file|ifile|image|list|label|nvar|nvarlit|varlit)\b)'
       captures: 
-        1: { name: variable.parameter.dbc }
-        2: { name: keyword operator.assignment.dbc }
-        3: { name: support.type.dbc }
+        1: { name: entity.name.tag.dbc }
+        2: { name: keyword.operator.dbc }
+        3: { name: constant.language.dbc }
     - include: '#prototype'
 
 
@@ -388,6 +388,8 @@ repository:
       - include: '#operand-seperators'
       - include: '#argument'
       end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+    - match: '([ \t]*:)'
+      name: support.type.dbc
     - include: '#operand-seperators'
     - include: '#argument'
     
@@ -403,7 +405,7 @@ repository:
         1: { name: variable.parameter.dbc }
         2: { name: keyword operator.assignment.dbc }
     - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      name: variable.other.dbc
+      name: meta.argument.dbc
     - include: '#brackets'
     - include: "#argument-parens"
     - include: '#prototype'
@@ -580,7 +582,7 @@ repository:
       - include: '#arguments'
       end: '(?<!^)(?<!:)(?<!\n)\n'
     # All others
-    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
+    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|div|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|mult|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
       captures:
         1: { name: support.function.builtin.dbc }
       name: meta.support.parameters.dbc
