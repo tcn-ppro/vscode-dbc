@@ -38,7 +38,12 @@
               "files.encoding": "cp850",
               "editor.tabSize": 5,
               "editor.detectIndentation": false,
-              "editor.insertSpaces": false
+              "editor.insertSpaces": false,
+              "files.insertFinalNewline": true,
+              "files.trimTrailingWhitespace": true,
+              "editor.rulers" : [ 80 ],
+              "files.eol": "\n"
+
             }
           }
     },
