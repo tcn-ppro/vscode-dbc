@@ -1,9 +1,11 @@
 {
     "name": "vscode-dbc",
     "displayName": "vscode-dbc",
-    "description": "DBC DX Language Support",
-    "version": "0.0.1",
+    "description": "DB/C Language Support",
+    "version": "0.1.0",
     "extensionKind": "workspace",
+    "publisher": "ProduceProSoftware",
+    "repository": "https://bitbucket.org/tcn_ppro/vscode-dbc",
     "engines": {
         "vscode": "^1.35.0"
     },
