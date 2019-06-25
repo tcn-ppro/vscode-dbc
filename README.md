@@ -16,6 +16,7 @@ Toggle Comments assume indentation. Which DB/C does not support. No known workar
 -----------------------------------------------------------------------------------------------------------
 ## Release Notes
 
-### 0.1.0
+### 1.0.0
 
 Initial release
+
