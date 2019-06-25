@@ -2,7 +2,7 @@
     "name": "vscode-dbc",
     "displayName": "vscode-dbc",
     "description": "DB/C Language Support",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "extensionKind": "workspace",
     "publisher": "ProduceProSoftware",
     "repository": "https://bitbucket.org/tcn_ppro/vscode-dbc",
