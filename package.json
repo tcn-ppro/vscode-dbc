@@ -2,7 +2,7 @@
     "name": "vscode-dbc",
     "displayName": "vscode-dbc",
     "description": "DB/C Language Support",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "extensionKind": "workspace",
     "publisher": "ProduceProSoftware",
     "repository": "https://bitbucket.org/tcn_ppro/vscode-dbc",
@@ -37,18 +37,19 @@
         ],
         "configurationDefaults": {
             "[dbc]": {
-              "files.encoding": "cp850",
-              "editor.tabSize": 5,
-              "editor.detectIndentation": false,
-              "editor.insertSpaces": false,
-              "files.insertFinalNewline": true,
-              "files.trimTrailingWhitespace": true,
-              "editor.rulers" : [ 80 ],
-              "files.eol": "\n",
-              "editor.wordSeparators": "`~!#%^&*()-=+[{]}\\|;:'\",<>/?"
-
+                "files.encoding": "cp850",
+                "editor.tabSize": 5,
+                "editor.detectIndentation": false,
+                "editor.insertSpaces": false,
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true,
+                "editor.rulers": [
+                    80
+                ],
+                "files.eol": "\n",
+                "editor.wordSeparators": "`~!#%^&*()-=+[{]}\\|;:'\",<>/?"
             }
-          }
+        }
     },
     "devDependencies": {
         "js-yaml": "^3.13.1"
