@@ -144,7 +144,7 @@
     "operand-logical": {
       "patterns": [
         {
-          "match": "((?<![[:alnum:]_\\$\\.@])(?i)(and|or|not)(?![[:alnum:]_\\$\\.@]))",
+          "match": "(((?<![[:alnum:]_\\$\\.@])(?i)(and|or|not)(?![[:alnum:]_\\$\\.@]))|\\!\\=|\\=|\\>|\\<)",
           "name": "keyword.operator.logical.dbc"
         }
       ]
@@ -737,6 +737,43 @@
         }
       ]
     },
+    "arguments-verb": {
+      "patterns": [
+        {
+          "begin": "([ \\t]*:\\n)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.type.dbc"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#operand-seperators"
+            },
+            {
+              "include": "#verb-argument"
+            },
+            {
+              "include": "#argument"
+            }
+          ],
+          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
+        },
+        {
+          "match": "([ \\t]*:)",
+          "name": "support.type.dbc"
+        },
+        {
+          "include": "#operand-seperators"
+        },
+        {
+          "include": "#verb-argument"
+        },
+        {
+          "include": "#argument"
+        }
+      ]
+    },
     "argument": {
       "patterns": [
         {
@@ -750,17 +787,6 @@
           "name": "meta.function-call.dbc"
         },
         {
-          "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)(\\=)",
-          "captures": {
-            "1": {
-              "name": "variable.parameter.dbc"
-            },
-            "2": {
-              "name": "keyword operator.assignment.dbc"
-            }
-          }
-        },
-        {
           "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)",
           "name": "meta.argument.dbc"
         },
@@ -772,6 +798,21 @@
         },
         {
           "include": "#prototype"
+        }
+      ]
+    },
+    "verb-argument": {
+      "patterns": [
+        {
+          "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)(\\=)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.dbc"
+            },
+            "2": {
+              "name": "keyword operator.assignment.dbc"
+            }
+          }
         }
       ]
     },
@@ -1118,12 +1159,12 @@
           "begin": "[ \\t]+([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)[ \\t]*",
           "beginCaptures": {
             "1": {
-              "name": "meta.function-call.dbc"
+              "name": "meta.verb-function-call.dbc"
             }
           },
           "patterns": [
             {
-              "include": "#arguments"
+              "include": "#arguments-verb"
             }
           ],
           "end": "(?<!^)(?<!:)(?<!\\n)\\n"

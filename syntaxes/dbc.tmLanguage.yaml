@@ -93,7 +93,7 @@ repository:
   # Operand Logical
   operand-logical:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))'
+    - match: '(((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))|\!\=|\=|\>|\<)'
       name: keyword.operator.logical.dbc
 
 # COMPILER DIRECTIVE
@@ -392,6 +392,23 @@ repository:
       name: support.type.dbc
     - include: '#operand-seperators'
     - include: '#argument'
+
+  # Multiple arguments with multiline support for verb calls
+  arguments-verb:
+    patterns:
+    - begin: '([ \t]*:\n)'
+      beginCaptures:
+        1: { name: support.type.dbc }
+      patterns:
+      - include: '#operand-seperators'
+      - include: '#verb-argument'
+      - include: '#argument'
+      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+    - match: '([ \t]*:)'
+      name: support.type.dbc
+    - include: '#operand-seperators'
+    - include: '#verb-argument'
+    - include: '#argument'
     
   # Any single argument
   argument:
@@ -400,15 +417,18 @@ repository:
     - include: '#constant-flags'
     - match: '~([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
       name: meta.function-call.dbc
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)(\=)'
-      captures: 
-        1: { name: variable.parameter.dbc }
-        2: { name: keyword operator.assignment.dbc }
     - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
       name: meta.argument.dbc
     - include: '#brackets'
     - include: "#argument-parens"
     - include: '#prototype'
+  
+  verb-argument:
+    patterns:
+    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)(\=)'
+      captures: 
+        1: { name: variable.parameter.dbc }
+        2: { name: keyword operator.assignment.dbc }
 
 
   # Parentheses arguments
@@ -596,7 +616,7 @@ repository:
     patterns:
     - begin: '[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
       beginCaptures:
-        1: { name: meta.function-call.dbc }
+        1: { name: meta.verb-function-call.dbc }
       patterns:
-      - include: '#arguments'
+      - include: "#arguments-verb"
       end: '(?<!^)(?<!:)(?<!\n)\n'
