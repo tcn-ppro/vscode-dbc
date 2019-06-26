@@ -90,11 +90,11 @@ repository:
     - match: '((?<![[:alnum:]_\$\.@])(?i)(sqznum|form|char|squeeze|trim|size|length|chop)(?![[:alnum:]_\$\.@]))'
       name: support.function.builtin.dbc
 
-  # Operand Comparators
-  operand-comparators:
+  # Operand Logical
+  operand-logical:
     patterns:
     - match: '((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))'
-      name: keyword.operator.comparator.dbc
+      name: keyword.operator.logical.dbc
 
 # COMPILER DIRECTIVE
   compiler-directive:
@@ -421,7 +421,7 @@ repository:
         patterns:
         - include: '#operand-arithmetic'
         - include: '#operand-altertype'
-        - include: '#operand-comparators'
+        - include: '#operand-logical'
         - match: '([ \t]*:\n)'
           name: support.type.dbc
         - include: '#argument'
@@ -479,7 +479,7 @@ repository:
     - match: '([ \t]*:\n)'
       name: support.type.dbc
     - include: '#constant-flags'
-    - include: '#operand-comparators'
+    - include: '#operand-logical'
     - include: '#argument-parens'
     - include: '#prototype'
 

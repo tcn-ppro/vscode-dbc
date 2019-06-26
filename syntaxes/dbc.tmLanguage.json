@@ -141,11 +141,11 @@
         }
       ]
     },
-    "operand-comparators": {
+    "operand-logical": {
       "patterns": [
         {
           "match": "((?<![[:alnum:]_\\$\\.@])(?i)(and|or|not)(?![[:alnum:]_\\$\\.@]))",
-          "name": "keyword.operator.comparator.dbc"
+          "name": "keyword.operator.logical.dbc"
         }
       ]
     },
@@ -793,7 +793,7 @@
               "include": "#operand-altertype"
             },
             {
-              "include": "#operand-comparators"
+              "include": "#operand-logical"
             },
             {
               "match": "([ \\t]*:\\n)",
@@ -906,7 +906,7 @@
           "include": "#constant-flags"
         },
         {
-          "include": "#operand-comparators"
+          "include": "#operand-logical"
         },
         {
           "include": "#argument-parens"
