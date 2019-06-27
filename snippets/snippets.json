@@ -1,0 +1,123 @@
+{
+    "FOR_LOOP": {
+        "prefix": "FOR ",
+        "body": [
+            "FOR ${1:VAR} FROM ${2:NUM_OR_VAR} TO ${3:NUM/VAR}",
+            "\t$0",
+            "REPEAT"
+        ],
+        "description": "DB/C For loop"
+    },
+    
+    "SEARCH": {
+        "prefix": "SEARCH ",
+        "body": [
+            "SEARCH ${1:VALUE} IN ${2:ARRAY_TO_SEARCH} TO ${3:ARRAY_SIZE} WITH ${4:POINTER_VAR}",
+            "$0"
+        ],
+        "description": "DB/C search"
+    },
+
+    "IF": {
+        "prefix": "IF ",
+        "body": [
+            "IF (${1:CONDITION})",
+            "\t$0",
+            "ENDIF"
+        ],
+        "description": "DB/C If statement"
+    },
+
+    "VERBDEF": {
+        "prefix": "VERB",
+        "body": [
+            "*+*",
+            ". @TITLE ${1:TITLE}",
+            ". @DESC ${2:DESCRIPTION}",
+            ".",
+            ". @IN",
+            ".",
+            ". @IN/OUT",
+            ".",
+            ". @OUT",
+            ".",
+            ". @FLAGS",
+            ".",
+            "$1 VERB\t${3:TAGS}",
+            "",
+            "$1 EXTERNAL"
+        ],
+        "description": "DB/C Verb definition"
+    },
+
+    "ROUTINE": {
+        "prefix": "ROUTINE",
+        "body": [
+            "*+*",
+            ". @TITLE ${1:TITLE}",
+            ". @DESC",
+            ".",
+            "$1 ROUTINE",
+            "\t$0",
+            "\tRETURN.NOTEOS",
+            "\tENDROUTINE ./$1"
+        ],
+        "description": "DB/C Routine definition"
+    },
+
+    "LROUTINE": {
+        "prefix": "LROUTINE",
+        "body": [
+            "*",
+            ".",
+            ". $1",
+            ".",
+            "$1 LROUTINE",
+            "\t$0",
+            "\tRETURN.NOTEOS",
+            "\tENDROUTINE ./$1"
+        ],
+        "description": "DB/C Local Routine definition"
+    },
+
+    "SCAN": {
+        "prefix": "SCAN ",
+        "body": [
+            "SCAN ${1:STRING_TO_FIND} IN ${2:STRING_TO_SEARCH}",
+            "IF EQUAL",
+            "\t$0",
+            "ENDIF"
+        ],
+        "description": "DB/C Scan"
+    },
+
+    "SWITCH": {
+        "prefix": "SWITCH ",
+        "body": [
+            "SWITCH ${1:VAR}",
+	        "\tCASE ${0:VALUE}",
+            "ENDSWITCH"
+        ],
+        "description": "DB/C Switch"
+    },
+
+    "IFDEF": {
+        "prefix": "#IFDEF ",
+        "body": [
+            "#IFDEF $1",
+	        "$0",
+            "#ENDIF ./IFDEF $1"
+        ],
+        "description": "DB/C IFDEF Compiler Directive"
+    },
+
+    "IFLABEL": {
+        "prefix": "#IFLABEL ",
+        "body": [
+            "#IFLABEL $1",
+	        "$0",
+            "#ENDIF ./IFLABEL $1"
+        ],
+        "description": "DB/C IFLABEL Compiler Directive"
+    }
+}
