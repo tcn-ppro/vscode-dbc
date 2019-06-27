@@ -606,7 +606,7 @@
           "match": "^[ \\t]+((?i)endroutine)(([ \\t]*\\n)|([ \\t]+.*\\n))",
           "captures": {
             "1": {
-              "name": "storage.modifier.dbc"
+              "name": "storage.type.routine.dbc"
             },
             "4": {
               "name": "comment.line.dbc"

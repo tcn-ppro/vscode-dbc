@@ -329,7 +329,7 @@ repository:
       end: '(?<!^)(?<!:)(?<!\n)\n'
     - match: '^[ \t]+((?i)endroutine)(([ \t]*\n)|([ \t]+.*\n))'
       captures:
-        1: { name: storage.modifier.dbc }
+        1: { name: storage.type.routine.dbc }
         4: { name: comment.line.dbc }
 
   routine-definition-parameters:
