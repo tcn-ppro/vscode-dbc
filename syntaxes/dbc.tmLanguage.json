@@ -821,7 +821,7 @@
         {
           "begin": "\\(",
           "beginCaptures": {
-            "1": {
+            "0": {
               "name": "punctuation.section.parentheses.begin.dbc"
             }
           },

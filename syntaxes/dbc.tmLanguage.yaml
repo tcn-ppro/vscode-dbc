@@ -436,7 +436,7 @@ repository:
     patterns:
       - begin: '\('
         beginCaptures:
-          1: { name: punctuation.section.parentheses.begin.dbc }
+          0: { name: punctuation.section.parentheses.begin.dbc }
         name: meta.argument.parens.dbc
         patterns:
         - include: '#operand-arithmetic'
