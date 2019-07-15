@@ -128,7 +128,7 @@
     "operand-seperators": {
       "patterns": [
         {
-          "match": "((?<![[:alnum:]_\\$\\.@])((?i)by|to|of|from|using|with|in|into|using)[ \\t]+|,)",
+          "match": "((?<![[:alnum:]_\\$\\.@])((?i)by|to|of|from|using|with|in|into|using)[ \\t]+|,|:)",
           "name": "support.type.dbc"
         }
       ]
@@ -537,23 +537,6 @@
     "verb-definition-parameters": {
       "patterns": [
         {
-          "begin": "([ \\t]*:\\n)",
-          "beginCaptures": {
-            "1": {
-              "name": "support.type.dbc"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#verb-definition-param"
-            },
-            {
-              "include": "#operand-seperators"
-            }
-          ],
-          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
-        },
-        {
           "include": "#verb-definition-param"
         },
         {
@@ -576,6 +559,10 @@
               "name": "constant.language.dbc"
             }
           }
+        },
+        {
+          "match": "([[:alpha:]_\\$][[:alnum:]_\\.\\$@]*)+",
+          "name": "entity.name.tag.dbc"
         },
         {
           "include": "#prototype"
@@ -617,23 +604,6 @@
     },
     "routine-definition-parameters": {
       "patterns": [
-        {
-          "begin": "([ \\t]*:\\n)",
-          "beginCaptures": {
-            "1": {
-              "name": "support.type.dbc"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#routine-definition-param"
-            },
-            {
-              "include": "#operand-seperators"
-            }
-          ],
-          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
-        },
         {
           "include": "#routine-definition-param"
         },
@@ -709,27 +679,6 @@
     "arguments": {
       "patterns": [
         {
-          "begin": "([ \\t]*:\\n)",
-          "beginCaptures": {
-            "1": {
-              "name": "support.type.dbc"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#operand-seperators"
-            },
-            {
-              "include": "#argument"
-            }
-          ],
-          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
-        },
-        {
-          "match": "([ \\t]*:)",
-          "name": "support.type.dbc"
-        },
-        {
           "include": "#operand-seperators"
         },
         {
@@ -739,30 +688,6 @@
     },
     "arguments-verb": {
       "patterns": [
-        {
-          "begin": "([ \\t]*:\\n)",
-          "beginCaptures": {
-            "1": {
-              "name": "support.type.dbc"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#operand-seperators"
-            },
-            {
-              "include": "#verb-argument"
-            },
-            {
-              "include": "#argument"
-            }
-          ],
-          "end": "(?<!^)(?<!:)(?<!\\n)(?=\\n)"
-        },
-        {
-          "match": "([ \\t]*:)",
-          "name": "support.type.dbc"
-        },
         {
           "include": "#operand-seperators"
         },

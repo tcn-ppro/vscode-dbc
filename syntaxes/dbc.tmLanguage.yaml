@@ -81,7 +81,7 @@ repository:
   # Operand Seperators
   operand-seperators:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into|using)[ \t]+|,)'
+    - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into|using)[ \t]+|,|:)'
       name: support.type.dbc
 
   # Operand Alter Types
@@ -296,13 +296,6 @@ repository:
 
   verb-definition-parameters:
     patterns:
-    - begin: '([ \t]*:\n)'
-      beginCaptures:
-        1: { name: support.type.dbc }
-      patterns:
-      - include: '#verb-definition-param'
-      - include: '#operand-seperators'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
     - include: '#verb-definition-param'
     - include: '#operand-seperators'
 
@@ -313,6 +306,8 @@ repository:
         1: { name: entity.name.tag.dbc }
         2: { name: keyword.operator.dbc }
         3: { name: constant.language.dbc }
+    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)+'
+      name: entity.name.tag.dbc
     - include: '#prototype'
 
 
@@ -334,13 +329,6 @@ repository:
 
   routine-definition-parameters:
     patterns:
-    - begin: '([ \t]*:\n)'
-      beginCaptures:
-        1: { name: support.type.dbc }
-      patterns:
-      - include: '#routine-definition-param'
-      - include: '#operand-seperators'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
     - include: '#routine-definition-param'
     - include: '#operand-seperators'
     
@@ -381,31 +369,12 @@ repository:
   # Multiple arguments with multiline support
   arguments:
     patterns:
-    - begin: '([ \t]*:\n)'
-      beginCaptures:
-        1: { name: support.type.dbc }
-      patterns:
-      - include: '#operand-seperators'
-      - include: '#argument'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-    - match: '([ \t]*:)'
-      name: support.type.dbc
     - include: '#operand-seperators'
     - include: '#argument'
 
   # Multiple arguments with multiline support for verb calls
   arguments-verb:
     patterns:
-    - begin: '([ \t]*:\n)'
-      beginCaptures:
-        1: { name: support.type.dbc }
-      patterns:
-      - include: '#operand-seperators'
-      - include: '#verb-argument'
-      - include: '#argument'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-    - match: '([ \t]*:)'
-      name: support.type.dbc
     - include: '#operand-seperators'
     - include: '#verb-argument'
     - include: '#argument'
@@ -602,7 +571,7 @@ repository:
       - include: '#arguments'
       end: '(?<!^)(?<!:)(?<!\n)\n'
     # All others
-    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|div|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|mult|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
+    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|div|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|mult|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|store|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
       captures:
         1: { name: support.function.builtin.dbc }
       name: meta.support.parameters.dbc
