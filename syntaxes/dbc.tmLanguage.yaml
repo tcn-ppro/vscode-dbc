@@ -130,9 +130,13 @@ repository:
     patterns:
     - begin: '\['
       name: meta.brackets.dbc
+      beginCaptures:
+        0: { name: punctuation.section.bracket.begin.dbc }
       patterns:
       - include: '#arguments'
       end: '(\]|(?<!^)(?<!:)(?<!\n)(?=\n))'
+      endCaptures:
+        0: { name: punctuation.section.bracket.end.dbc }
 
   # Define a variable on definition
   type-definition:
