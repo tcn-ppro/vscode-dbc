@@ -8,6 +8,16 @@
         ],
         "description": "DB/C For loop"
     },
+
+    "LOOP": {
+        "prefix": "LOOP",
+        "body": [
+            "LOOP",
+            "\t$0",
+            "REPEAT"
+        ],
+        "description": "DB/C Loop"
+    },
     
     "SEARCH": {
         "prefix": "SEARCH ",
