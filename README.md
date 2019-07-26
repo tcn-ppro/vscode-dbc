@@ -20,3 +20,6 @@ Toggle Comments assume indentation. Which DB/C does not support. No known workar
 
 Initial release
 
+### 1.1.0
+
+Basic snippet support
