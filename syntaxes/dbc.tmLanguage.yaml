@@ -1,408 +1,410 @@
 ---
 name: dbc
 scopeName: source.dbc
-version: '0.0.1'
+version: "0.0.1"
 patterns:
-- include: '#prototype'
-- include: '#main'
+  - include: "#prototype"
+  - include: "#main"
 repository:
   prototype:
     patterns:
-    - include: '#line-comments'
-    - include: '#strings'
+      - include: "#line-comments"
+      - include: "#strings"
   main:
     patterns:
-    - include: '#verb-definition'
-    - include: '#routine-definition'
-    - include: '#label-definition'
-    - include: '#variable-definitions'
-    - include: '#debug'
-    - include: '#compiler-directive'
-    - include: '#file-includes'
-    - include: '#statements'
+      - include: "#verb-definition"
+      - include: "#routine-definition"
+      - include: "#label-definition"
+      - include: "#variable-definitions"
+      - include: "#debug"
+      - include: "#compiler-directive"
+      - include: "#file-includes"
+      - include: "#statements"
 
-# COMMENTS
+  # COMMENTS
   # Comments begin with a [# .] and finish at the end of the line
   line-comments:
     patterns:
-    - name: comment.line.dbc
-      begin: '^[\.\*\+]'
-      end: '(?<!^)$\n'
+      - name: comment.line.dbc
+        begin: '^[\.\*\+]'
+        end: '(?<!^)$\n'
 
   # Comments after a statement
   eol-comments:
     patterns:
-    - begin: '[ \t]+[\.\*\+]'
-      name: comment.line.dbc
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+      - begin: '[ \t]+[\.\*\+]'
+        name: comment.line.dbc
+        end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
   # Comments after variable declaration treated as a comment
   eol-comments-catchall:
     patterns:
-    - begin: '[ \t]+*'
-      name: comment.line.dbc
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+      - begin: '[ \t]+*'
+        name: comment.line.dbc
+        end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
 
-# STRINGS
+  # STRINGS
   strings:
     patterns:
-    - begin: '"'
-      beginCaptures:
-        '0':
-          name: punctuation.definition.string.begin.dbc
-      end: '["\n]'
-      endCaptures:
-        '0':
-          name: punctuation.definition.string.end.dbc
-      name: string.quoted.double.dbc
-      patterns:
-      - match: '#.'
-        name: constant.character.escape.dbc
+      - begin: '"'
+        beginCaptures:
+          "0":
+            name: punctuation.definition.string.begin.dbc
+        end: '["\n]'
+        endCaptures:
+          "0":
+            name: punctuation.definition.string.end.dbc
+        name: string.quoted.double.dbc
+        patterns:
+          - match: "#."
+            name: constant.character.escape.dbc
 
-# CONSTANTS
+  # CONSTANTS
   # Flags
   constant-flags:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])(?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\$\.@])'
-      name: constant.language.dbc
+      - match: '((?<![[:alnum:]_\$\.@])(?i)not|eos|over|equal|less|zero)(?![[:alnum:]_\$\.@])'
+        name: constant.language.dbc
 
   # Numbers
   constant-numbers:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])(-)?(([0-9]+\.[0-9]+)|(\.[0-9]+)|([0-9]+))(?![[:alnum:]_\$\.@]))'
-      name: constant.numeric.dbc
+      - match: '((?<![[:alnum:]_\$\.@])(-)?(([0-9]+\.[0-9]+)|(\.[0-9]+)|([0-9]+))(?![[:alnum:]_\$\.@]))'
+        name: constant.numeric.dbc
 
-# OPERANDS
+  # OPERANDS
   # Operand Arithmetics
   operand-arithmetic:
-    patterns: 
-    - match: '(\+|-|/|%|\||\^|~|!|\*)'
-      name: keyword.operator.arithmetic.dbc
+    patterns:
+      - match: '(\+|-|/|%|\||\^|~|!|\*)'
+        name: keyword.operator.arithmetic.dbc
 
   # Operand Seperators
   operand-seperators:
     patterns:
-    - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into|using)[ \t]+|,|:)'
-      name: support.type.dbc
+      - match: '((?<![[:alnum:]_\$\.@])((?i)by|to|of|from|using|with|in|into|using)[ \t]+|,|:)'
+        name: support.type.dbc
 
   # Operand Alter Types
   operand-altertype:
-    patterns: 
-    - match: '((?<![[:alnum:]_\$\.@])(?i)(sqznum|form|char|squeeze|trim|size|length|chop)(?![[:alnum:]_\$\.@]))'
-      name: support.function.builtin.dbc
+    patterns:
+      - match: '((?<![[:alnum:]_\$\.@])(?i)(sqznum|form|char|squeeze|trim|size|length|chop)(?![[:alnum:]_\$\.@]))'
+        name: support.function.builtin.dbc
 
   # Operand Logical
   operand-logical:
     patterns:
-    - match: '(((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))|\!\=|\=|\>|\<)'
-      name: keyword.operator.logical.dbc
+      - match: '(((?<![[:alnum:]_\$\.@])(?i)(and|or|not)(?![[:alnum:]_\$\.@]))|\!\=|\=|\>|\<)'
+        name: keyword.operator.logical.dbc
 
-# COMPILER DIRECTIVE
+  # COMPILER DIRECTIVE
   compiler-directive:
     patterns:
-    - match: '[ \t]+(\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      captures:
-        1: { name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc }
-        2: { name: meta.argument.dbc }
-    - match: '^[ \t]+(\#(?i)endif|else)(?![[:alnum:]_\$\.@])(([ \t]*\n)|([ \t]+.*\n))'
-      captures:
-        1: { name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc }
-        4: { name: comment.line.dbc }
+      - match: '[ \t]+(\#(?i)ifz|ifnz|ifdef|ifdef|ifdef|ifndef|ifndef|ifndef|iflabel|ifnlabel|elseif|if)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+        captures:
+          1:
+            {
+              name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc,
+            }
+          2: { name: meta.argument.dbc }
+      - match: '^[ \t]+(\#(?i)endif|else)(?![[:alnum:]_\$\.@])(([ \t]*\n)|([ \t]+.*\n))'
+        captures:
+          1:
+            {
+              name: entity.name.section.preprocessor.dbc markup.underline.dbc meta.preprocessor.dbc,
+            }
+          4: { name: comment.line.dbc }
 
-# FILE INCLUDES
+  # FILE INCLUDES
   file-includes:
     patterns:
-    - match: '^[ \t]+((?i)inc)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*\n'
-      captures:
-        1: { name: 'support.function.builtin.dbc' }
+      - match: '^[ \t]+((?i)inc)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*\n'
+        captures:
+          1: { name: "support.function.builtin.dbc" }
 
-
-# VARIABLES DEFINITIONS
+  # VARIABLES DEFINITIONS
   variable-definitions:
     patterns:
-    - include: '#standard-types'
-    - include: '#label-types'
-    - include: '#list-types'
-    - include: '#file-types'
-    - include: '#varlist-types'
+      - include: "#standard-types"
+      - include: "#label-types"
+      - include: "#list-types"
+      - include: "#file-types"
+      - include: "#varlist-types"
 
   # Array brackets
   brackets:
     patterns:
-    - begin: '\['
-      name: meta.brackets.dbc
-      beginCaptures:
-        0: { name: punctuation.section.bracket.begin.dbc }
-      patterns:
-      - include: '#arguments'
-      end: '(\]|(?<!^)(?<!:)(?<!\n)(?=\n))'
-      endCaptures:
-        0: { name: punctuation.section.bracket.end.dbc }
+      - begin: '\['
+        name: meta.brackets.dbc
+        beginCaptures:
+          0: { name: punctuation.section.bracket.begin.dbc }
+        patterns:
+          - include: "#arguments"
+        end: '(\]|(?<!^)(?<!:)(?<!\n)(?=\n))'
+        endCaptures:
+          0: { name: punctuation.section.bracket.end.dbc }
 
   # Define a variable on definition
   type-definition:
     patterns:
-    - begin: '([ \t]+((?i)by|to|of|from|using|with|in|into)[ \t]+|[ \t]*,|:\n)'
-      beginCaptures:
-        1: { name: support.type.dbc }
-      name: meta.storage.define
-      patterns:
-      - match: '([ \t]*((?i)initial))'
-        name: storage.modifier.dbc
-      - include: '#arguments'
-      - include: '#eol-comments'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-    - include: '#address-types'
-    - include: '#arguments'
+      - begin: '([ \t]+((?i)by|to|of|from|using|with|in|into)[ \t]+|[ \t]*,|:\n)'
+        beginCaptures:
+          1: { name: support.type.dbc }
+        name: meta.storage.define
+        patterns:
+          - match: '([ \t]*((?i)initial))'
+            name: storage.modifier.dbc
+          - include: "#arguments"
+          - include: "#eol-comments"
+        end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+      - include: "#address-types"
+      - include: "#arguments"
 
   address-types:
     patterns:
-    - match: '@'
-      name: storage.modifier.dbc
+      - match: "@"
+        name: storage.modifier.dbc
 
   # VARIABLE DEFINITIONS (STANDARD)
   standard-types:
     patterns:
-    - include: '#constant-types'
-    - include: '#character-types'
-    - include: '#numeric-types'
-    - include: '#var-types'
+      - include: "#constant-types"
+      - include: "#character-types"
+      - include: "#numeric-types"
+      - include: "#var-types"
 
   # Constant variables
   constant-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)define|equ)[ \t]+'
-      beginCaptures:
-        1: { name: entity.name.type.constant.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.constant.dbc
-      patterns:
-      - include: '#constant-numbers'
-      - include: "#arguments"
-      - include: '#eol-comments-catchall'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)define|equ)[ \t]+'
+        beginCaptures:
+          1: { name: entity.name.type.constant.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.constant.dbc
+        patterns:
+          - include: "#constant-numbers"
+          - include: "#arguments"
+          - include: "#eol-comments-catchall"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # Character variables
   character-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)char|dim|init|gchar)[ \t]+'
-      beginCaptures:
-        1: { name: entity.name.type.char.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.char.dbc
-      patterns:
-      - include: '#type-definition'
-      - include: '#eol-comments-catchall'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)char|dim|init|gchar)[ \t]+'
+        beginCaptures:
+          1: { name: entity.name.type.char.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.char.dbc
+        patterns:
+          - include: "#type-definition"
+          - include: "#eol-comments-catchall"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # Numeric variables
   numeric-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)form|num|int|float|gform|gnum)[ \t]+'
-      beginCaptures:
-        1: { name: entity.name.type.form.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.form.dbc
-      patterns:
-      - include: '#type-definition'
-      - include: '#eol-comments-catchall'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)form|num|int|float|gform|gnum)[ \t]+'
+        beginCaptures:
+          1: { name: entity.name.type.form.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.form.dbc
+        patterns:
+          - include: "#type-definition"
+          - include: "#eol-comments-catchall"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # Variable (any) variables
   var-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)var)[ \t]+'
-      beginCaptures:
-        1: { name: entity.name.type.var.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.var.dbc
-      patterns:
-      - include: '#type-definition'
-      - include: '#eol-comments-catchall'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)var)[ \t]+'
+        beginCaptures:
+          1: { name: entity.name.type.var.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.var.dbc
+        patterns:
+          - include: "#type-definition"
+          - include: "#eol-comments-catchall"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # VARIABLE DEFINITIONS (LABELS)
   label-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)label)(?![[:alnum:]_\$\.@])[ \t]*'
-      beginCaptures:
-        1: { name: entity.name.function.var.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.function.dbc
-      patterns:
-      - include: '#type-definition'
-      - include: '#eol-comments-catchall'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # External
-    - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)external)[ \t]*\n'
-      captures:
-        1: { name: entity.name.function.var.dbc }
-        2: { name: storage.type.dbc }
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)label)(?![[:alnum:]_\$\.@])[ \t]*'
+        beginCaptures:
+          1: { name: entity.name.function.var.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.function.dbc
+        patterns:
+          - include: "#type-definition"
+          - include: "#eol-comments-catchall"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # External
+      - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)external)[ \t]*\n'
+        captures:
+          1: { name: entity.name.function.var.dbc }
+          2: { name: storage.type.dbc }
 
   # VARIABLE DEFINITIONS (LIST)
   list-types:
     patterns:
-    - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)list)[ \t]+(@)'
-      captures:
-        1: { name: entity.name.type.list.dbc }
-        2: { name: storage.type.dbc }
-        3: { name: storage.modifier.dbc }
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)list)'
-      beginCaptures:
-        1: { name: entity.name.type.list.dbc }
-        2: { name: storage.modifier.dbc }
-      name: meta.storage.list.dbc
-      patterns:
-      - include: '#standard-types'
-      - include: '#prototype'
-      end: '^[ \t]+((?i)listend)(([ \t]*\n)|([ \t]+.*\n))'
-      endCaptures:
-        1: { name: storage.modifier.dbc }
-        4: { name: comment.line.dbc }
-  
+      - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)list)[ \t]+(@)'
+        captures:
+          1: { name: entity.name.type.list.dbc }
+          2: { name: storage.type.dbc }
+          3: { name: storage.modifier.dbc }
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)list)'
+        beginCaptures:
+          1: { name: entity.name.type.list.dbc }
+          2: { name: storage.modifier.dbc }
+        name: meta.storage.list.dbc
+        patterns:
+          - include: "#standard-types"
+          - include: "#prototype"
+        end: '^[ \t]+((?i)listend)(([ \t]*\n)|([ \t]+.*\n))'
+        endCaptures:
+          1: { name: storage.modifier.dbc }
+          4: { name: comment.line.dbc }
+
   # VARIABLE DEFINITIONS (FILES)
   file-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)file|ifile|afile|pfile|comfile)[ \t]*'
-      beginCaptures:
-        1: { name: entity.name.interface.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.interface.dbc
-      patterns:
-      - include: '#address-types'
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)file|ifile|afile|pfile|comfile)[ \t]*'
+        beginCaptures:
+          1: { name: entity.name.interface.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.interface.dbc
+        patterns:
+          - include: "#address-types"
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # VARIABLE DEFINITIONS (VARLIST)
   varlist-types:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)varlist)[ \t]*'
-      beginCaptures:
-        1: { name: entity.name.type.varlist.dbc }
-        2: { name: storage.type.dbc }
-      name: meta.storage.varlist.dbc
-      patterns:
-      - include: '#address-types'
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)varlist)[ \t]*'
+        beginCaptures:
+          1: { name: entity.name.type.varlist.dbc }
+          2: { name: storage.type.dbc }
+        name: meta.storage.varlist.dbc
+        patterns:
+          - include: "#address-types"
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
-# VERB DEFINITION
+  # VERB DEFINITION
   verb-definition:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)verb)[ \t]*'
-      beginCaptures:
-        1: { name: entity.name.function.verb.dbc }
-        2: { name: storage.type.verb.dbc }
-      name: meta.function.parameters.dbc
-      patterns:
-      - include: '#verb-definition-parameters'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)verb)[ \t]*'
+        beginCaptures:
+          1: { name: entity.name.function.verb.dbc }
+          2: { name: storage.type.verb.dbc }
+        name: meta.function.parameters.dbc
+        patterns:
+          - include: "#verb-definition-parameters"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   verb-definition-parameters:
     patterns:
-    - include: '#verb-definition-param'
-    - include: '#operand-seperators'
+      - include: "#verb-definition-param"
+      - include: "#operand-seperators"
 
   verb-definition-param:
     patterns:
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)*([\#\=])\b((?i)(array|afile|any|carray|carray1|carray2|carray3|cnvar|cnvarlit|comfile|cvar|cvarlit|device|file|ifile|image|list|label|nvar|nvarlit|varlit)\b)'
-      captures: 
-        1: { name: entity.name.tag.dbc }
-        2: { name: keyword.operator.dbc }
-        3: { name: constant.language.dbc }
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)+'
-      name: entity.name.tag.dbc
-    - include: '#prototype'
+      - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)*([\#\=])\b((?i)(array|afile|any|carray|carray1|carray2|carray3|cnvar|cnvarlit|comfile|cvar|cvarlit|device|file|ifile|image|list|label|nvar|nvarlit|varlit)\b)'
+        captures:
+          1: { name: entity.name.tag.dbc }
+          2: { name: keyword.operator.dbc }
+          3: { name: constant.language.dbc }
+      - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)+'
+        name: entity.name.tag.dbc
+      - include: "#prototype"
 
-
-# ROUTINE DEFINITION
+  # ROUTINE DEFINITION
   routine-definition:
     patterns:
-    - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)routine|lroutine)(?![[:alnum:]_\$\.@])'
-      beginCaptures:
-        1: { name: entity.name.function.routine.dbc }
-        2: { name: storage.type.routine.dbc }
-      name: meta.function.parameters.dbc
-      patterns:
-      - include: '#routine-definition-parameters'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    - match: '^[ \t]+((?i)endroutine)(([ \t]*\n)|([ \t]+.*\n))'
-      captures:
-        1: { name: storage.type.routine.dbc }
-        4: { name: comment.line.dbc }
+      - begin: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]+((?i)routine|lroutine)(?![[:alnum:]_\$\.@])'
+        beginCaptures:
+          1: { name: entity.name.function.routine.dbc }
+          2: { name: storage.type.routine.dbc }
+        name: meta.function.parameters.dbc
+        patterns:
+          - include: "#routine-definition-parameters"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      - match: '^[ \t]+((?i)endroutine)(([ \t]*\n)|([ \t]+.*\n))'
+        captures:
+          1: { name: storage.type.routine.dbc }
+          4: { name: comment.line.dbc }
 
   routine-definition-parameters:
     patterns:
-    - include: '#routine-definition-param'
-    - include: '#operand-seperators'
-    
+      - include: "#routine-definition-param"
+      - include: "#operand-seperators"
+
   routine-definition-param:
     patterns:
-    - match: '~([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      name: variable.parameter.function-call.dbc
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      name: variable.parameter.dbc
-    - include: '#prototype'
+      - match: '~([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+        name: variable.parameter.function-call.dbc
+      - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+        name: variable.parameter.dbc
+      - include: "#prototype"
 
-# LABEL DEFINITION
+  # LABEL DEFINITION
   label-definition:
     patterns:
-    - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*\n'
-      captures:
-        1: { name: entity.name.function.label.dbc }
+      - match: '^([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*\n'
+        captures:
+          1: { name: entity.name.function.label.dbc }
 
-# DEBUG
+  # DEBUG
   debug:
     patterns:
-    - match: '^[ \t]+((?i)debug)(?![[:alnum:]_\$\.@])[ \t]*\n'
-      captures:
-        1: { name: invalid.illegal }
+      - match: '^[ \t]+((?i)debug)(?![[:alnum:]_\$\.@])[ \t]*\n'
+        captures:
+          1: { name: invalid.illegal }
 
-# STATEMENTS
+  # STATEMENTS
 
   statements:
     patterns:
-    - include: '#chain-to'
-    - include: '#if-keywords'
-    - include: '#loop-keywords'
-    - include: '#switch-keywords'
-    - include: '#function-keywords'
-    - include: '#support-functions'
-    - include: '#verb-call'
+      - include: "#chain-to"
+      - include: "#if-keywords"
+      - include: "#loop-keywords"
+      - include: "#switch-keywords"
+      - include: "#function-keywords"
+      - include: "#support-functions"
+      - include: "#verb-call"
 
   # Multiple arguments with multiline support
   arguments:
     patterns:
-    - include: '#operand-seperators'
-    - include: '#argument'
+      - include: "#operand-seperators"
+      - include: "#argument"
 
   # Multiple arguments with multiline support for verb calls
   arguments-verb:
     patterns:
-    - include: '#operand-seperators'
-    - include: '#verb-argument'
-    - include: '#argument'
-    
+      - include: "#operand-seperators"
+      - include: "#verb-argument"
+      - include: "#argument"
+
   # Any single argument
   argument:
     patterns:
-    - include: '#constant-numbers'
-    - include: '#constant-flags'
-    - match: '~([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      name: meta.function-call.dbc
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
-      name: meta.argument.dbc
-    - include: '#brackets'
-    - include: "#argument-parens"
-    - include: '#prototype'
-  
+      - include: "#constant-numbers"
+      - include: "#constant-flags"
+      - match: '~([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+        name: meta.function-call.dbc
+      - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)'
+        name: meta.argument.dbc
+      - include: "#brackets"
+      - include: "#argument-parens"
+      - include: "#prototype"
+
   verb-argument:
     patterns:
-    - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)(\=)'
-      captures: 
-        1: { name: variable.parameter.dbc }
-        2: { name: keyword operator.assignment.dbc }
-
+      - match: '([[:alpha:]_\$][[:alnum:]_\.\$@]*)(\=)'
+        captures:
+          1: { name: variable.parameter.dbc }
+          2: { name: keyword operator.assignment.dbc }
 
   # Parentheses arguments
   argument-parens:
@@ -412,12 +414,12 @@ repository:
           0: { name: punctuation.section.parentheses.begin.dbc }
         name: meta.argument.parens.dbc
         patterns:
-        - include: '#operand-arithmetic'
-        - include: '#operand-altertype'
-        - include: '#operand-logical'
-        - match: '([ \t]*:\n)'
-          name: support.type.dbc
-        - include: '#argument'
+          - include: "#operand-arithmetic"
+          - include: "#operand-altertype"
+          - include: "#operand-logical"
+          - match: '([ \t]*:\n)'
+            name: support.type.dbc
+          - include: "#argument"
         end: '(\)|(?<!^)(?<!:)(?<!\n)(?=\n))'
         endCaptures:
           1: { name: punctuation.section.parentheses.end.dbc }
@@ -430,166 +432,163 @@ repository:
           1: { name: keyword.control.dbc }
         name: meta.if.parameters
         patterns:
-        - include: '#if-keyword-parameters'
+          - include: "#if-keyword-parameters"
         end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
-
 
   # STATEMENTS (CHAIN TO)
   chain-to:
     patterns:
-    - begin: '^[ \t]+((?i)chain)[ \t]+'
-      beginCaptures: 
-        1: { name: keyword.control.dbc }
-        2: { name: meta.function-call.dbc }
-      patterns:
-      - include: '#argument'
-      - include: '#prototype'
-      end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
+      - begin: '^[ \t]+((?i)chain)[ \t]+'
+        beginCaptures:
+          1: { name: keyword.control.dbc }
+          2: { name: meta.function-call.dbc }
+        patterns:
+          - include: "#argument"
+          - include: "#prototype"
+        end: '(?<!^)(?<!:)(?<!\n)(?=\n)'
 
   # STATEMENTS (IF KEYWORD)
   if-keywords:
-    patterns: 
-    - begin: '^[ \t]+((?i)else[ \t]+)?((?i)if(?![[:alnum:]_\$\.@]))'
-      beginCaptures:
-        1: { name: keyword.control.if.dbc }
-        2: { name: keyword.control.if.dbc }
+    patterns:
+      - begin: '^[ \t]+((?i)else[ \t]+)?((?i)if(?![[:alnum:]_\$\.@]))'
+        beginCaptures:
+          1: { name: keyword.control.if.dbc }
+          2: { name: keyword.control.if.dbc }
 
-      name: meta.if.parameters
-      patterns:
-        - include: '#if-keyword-parameters'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-  
-    - match: '^[ \t]+((?i)else)(([ \t]*\n))'
-      captures:
-        1: { name: keyword.control.if.dbc }
-    - match: '^[ \t]+((?i)endif)(([ \t]*\n)|([ \t]+.*\n))'
-      captures:
-        1: { name: keyword.control.if.dbc }
-        4: { name: comment.line.dbc }
+        name: meta.if.parameters
+        patterns:
+          - include: "#if-keyword-parameters"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+
+      - match: '^[ \t]+((?i)else)(([ \t]*\n))'
+        captures:
+          1: { name: keyword.control.if.dbc }
+      - match: '^[ \t]+((?i)endif)(([ \t]*\n)|([ \t]+.*\n))'
+        captures:
+          1: { name: keyword.control.if.dbc }
+          4: { name: comment.line.dbc }
 
   if-keyword-parameters:
     patterns:
-    - match: '([ \t]*:\n)'
-      name: support.type.dbc
-    - include: '#constant-flags'
-    - include: '#operand-logical'
-    - include: '#argument-parens'
-    - include: '#prototype'
+      - match: '([ \t]*:\n)'
+        name: support.type.dbc
+      - include: "#constant-flags"
+      - include: "#operand-logical"
+      - include: "#argument-parens"
+      - include: "#prototype"
 
   # STATEMENTS (LOOP KEYWORDS)
   loop-keywords:
     patterns:
-    # Loop/repeat
-    - match: '^[ \t]+((?i)loop|repeat)([ \t]*\n)'
-      captures:
-        1: { name: keyword.control.loop.dbc }
-    # Break/continue
-    - begin: '^[ \t]+((?i)break|continue)(?![[:alnum:]_\$\.@])[ \t]*'
-      captures:
-        1: { name: keyword.control.loop.dbc }
-      patterns:
-      - include: '#if-keyword-after'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # For
-    - begin: '^[ \t]+((?i)for)(?![[:alnum:]_\$\.@])[ \t]*'
-      beginCaptures:
-        1: { name: keyword.control.loop.dbc }
-      name: meta.loop.parameters.dbc
-      patterns:
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Loop/repeat
+      - match: '^[ \t]+((?i)loop|repeat)([ \t]*\n)'
+        captures:
+          1: { name: keyword.control.loop.dbc }
+      # Break/continue
+      - begin: '^[ \t]+((?i)break|until|continue)(?![[:alnum:]_\$\.@])[ \t]*'
+        captures:
+          1: { name: keyword.control.loop.dbc }
+        patterns:
+          - include: "#if-keyword-after"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # For
+      - begin: '^[ \t]+((?i)for)(?![[:alnum:]_\$\.@])[ \t]*'
+        beginCaptures:
+          1: { name: keyword.control.loop.dbc }
+        name: meta.loop.parameters.dbc
+        patterns:
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # STATEMENTS (SWITCH KEYWORD)
   switch-keywords:
     patterns:
-    - begin: '^[ \t]+((?i)switch|case)(?![[:alnum:]_\$\.@])[ \t]*'
-      captures:
-        1: { name: keyword.control.dbc }
-      name: meta.switch.parameters.dbc
-      patterns:
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    - match: '^[ \t]+((?i)endswitch|default)(([ \t]*\n)|([ \t]+.*\n))'
-      captures:
-        1: { name: keyword.control.switch.dbc }
-        4: { name: comment.line.dbc }
-
+      - begin: '^[ \t]+((?i)switch|case)(?![[:alnum:]_\$\.@])[ \t]*'
+        captures:
+          1: { name: keyword.control.dbc }
+        name: meta.switch.parameters.dbc
+        patterns:
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      - match: '^[ \t]+((?i)endswitch|default)(([ \t]*\n)|([ \t]+.*\n))'
+        captures:
+          1: { name: keyword.control.switch.dbc }
+          4: { name: comment.line.dbc }
 
   # STATEMENTS (FUNCTION KEYWORDS)
   function-keywords:
     patterns:
-    # Call
-    - begin: '^[ \t]+((?i)call)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
-      captures:
-        1: { name: keyword.control.dbc }
-        2: { name: meta.function-call.dbc }
-      name: meta.function-call.parameters.dbc
-      patterns:
-      - include: '#if-keyword-after'
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # Return/Noreturn
-    - begin: '^[ \t]+((?i)return|noreturn)(?![[:alnum:]_\$\.@])[ \t]*'
-      captures:
-        1: { name: keyword.control.dbc }
-      name: meta.function-call.parameters.dbc
-      patterns:
-      - include: '#if-keyword-after'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # Goto
-    - begin: '^[ \t]+((?i)goto)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
-      captures:
-        1: { name: keyword.control.dbc }
-        2: { name: meta.function-call.dbc }
-      name: meta.function-call.parameters.dbc
-      patterns:
-      - include: '#if-keyword-after'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # Branch
-    - begin: '^[ \t]+((?i)branch|perform)[ \t]+'
-      captures:
-        1: { name: keyword.control.dbc }
-      name: meta.function-call.parameters.dbc
-      patterns:
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Call
+      - begin: '^[ \t]+((?i)call)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
+        captures:
+          1: { name: keyword.control.dbc }
+          2: { name: meta.function-call.dbc }
+        name: meta.function-call.parameters.dbc
+        patterns:
+          - include: "#if-keyword-after"
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Return/Noreturn
+      - begin: '^[ \t]+((?i)return|noreturn)(?![[:alnum:]_\$\.@])[ \t]*'
+        captures:
+          1: { name: keyword.control.dbc }
+        name: meta.function-call.parameters.dbc
+        patterns:
+          - include: "#if-keyword-after"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Goto
+      - begin: '^[ \t]+((?i)goto)[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
+        captures:
+          1: { name: keyword.control.dbc }
+          2: { name: meta.function-call.dbc }
+        name: meta.function-call.parameters.dbc
+        patterns:
+          - include: "#if-keyword-after"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Branch
+      - begin: '^[ \t]+((?i)branch|perform)[ \t]+'
+        captures:
+          1: { name: keyword.control.dbc }
+        name: meta.function-call.parameters.dbc
+        patterns:
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # STATEMENTS (SUPPORT FUNCTIONS)
   support-functions:
     patterns:
-    # Setflag
-    - begin: '^[ \t]+((?i)setflag)[ \t]+'
-      captures:
-        1: { name: support.function.builtin.dbc }
-      name: meta.support.parameters.dbc
-      patterns:
-      - include: '#constant-flags'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # Trap
-    - begin: '^[ \t]+((?i)trap)[ \t]+'
-      captures:
-        1: { name: support.function.builtin.dbc }
-      name: meta.support.parameters.dbc
-      patterns:
-      - include: '#if-keyword-after'
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-    # All others
-    - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|div|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|load|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|mult|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|store|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
-      captures:
-        1: { name: support.function.builtin.dbc }
-      name: meta.support.parameters.dbc
-      patterns:
-      - include: '#arguments'
-      end: '(?<!^)(?<!:)(?<!\n)\n'
-
+      # Setflag
+      - begin: '^[ \t]+((?i)setflag)[ \t]+'
+        captures:
+          1: { name: support.function.builtin.dbc }
+        name: meta.support.parameters.dbc
+        patterns:
+          - include: "#constant-flags"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # Trap
+      - begin: '^[ \t]+((?i)trap)[ \t]+'
+        captures:
+          1: { name: support.function.builtin.dbc }
+        name: meta.support.parameters.dbc
+        patterns:
+          - include: "#if-keyword-after"
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
+      # All others
+      - begin: '^[ \t]+((?i)(add|append|beep|bump|change|charrest|charrestore|charsave|chop|clear|clearadr|clearendkey|clearlabel|clock|close|closeall|cmatch|cmove|comclr|comctl|comopen|comclose|compare|compareadr|comtst|comwait|console|count|debug|delete|deletek|destroy|disable|display|divide|div|draw|edit|empty|enable|endset|erase|execute|extend|filepi|fill|flagrest|flagrestore|flagsave|flusheof|format|fposit|get|getcolor|getcursor|getendkey|getglobal|getlabel|getmodules|getname|getobject|getpaperbins|getparm|getposition|getprinters|getwindow|hide|insert|keyin|keywords|lcmove|lenset|link|loadadr|loadlabel|loadmod|loadparm|make|makeglobal|makevar|match|mod|move|moveadr|movefptr|movelabel|movelabel|movelength|movelptr|movelv|movesize|movevl|multiply|mult|nformat|noeject|open|pack|packlen|pause|ploadmod|popreturn|prepare|print|pushreturn|put|putfirst|query|read|readgplk|readkg|readkglk|readkgp|readkp|readkplk|readks|readkslk|readlk|recv|recvclr|release|rename|rep|replace|replace|reposit|reset|resetparm|retcount|rollout|rotate|scan|scan|scrnrest|scrnrestore|scrnsave|search|send|sendclr|set|setendkey|setlptr|setnull|sformat|show|shutdown|sound|splclose|splopen|splopt|sqlcode|sqlexec|sqlmsg|squeeze|staterest|staterestore|statesave|statesize|stop|store|storeadr|storelabel|sub|subtract|tabpage|test|testadr|testlabel|trap|trapclr|traprest|traprestore|trapsave|trapsize|trim|type|unlink|unload|unlock|unpack|unpacklist|updatab|update|wait|weof|winrest|winrestore|winsave|winsize|write))(?![[:alnum:]_\$\.@])[ \t]*'
+        captures:
+          1: { name: support.function.builtin.dbc }
+        name: meta.support.parameters.dbc
+        patterns:
+          - include: "#arguments"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
 
   # STATEMENTS (VERB CALL)
   verb-call:
     patterns:
-    - begin: '[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
-      beginCaptures:
-        1: { name: meta.verb-function-call.dbc }
-      patterns:
-      - include: "#arguments-verb"
-      end: '(?<!^)(?<!:)(?<!\n)\n'
+      - begin: '[ \t]+([[:alpha:]_\$][[:alnum:]_\.\$@]*)[ \t]*'
+        beginCaptures:
+          1: { name: meta.verb-function-call.dbc }
+        patterns:
+          - include: "#arguments-verb"
+        end: '(?<!^)(?<!:)(?<!\n)\n'
