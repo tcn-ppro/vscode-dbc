@@ -903,7 +903,7 @@
           }
         },
         {
-          "begin": "^[ \\t]+((?i)break|continue)(?![[:alnum:]_\\$\\.@])[ \\t]*",
+          "begin": "^[ \\t]+((?i)break|until|continue)(?![[:alnum:]_\\$\\.@])[ \\t]*",
           "captures": {
             "1": {
               "name": "keyword.control.loop.dbc"
