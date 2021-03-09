@@ -27,18 +27,28 @@ function activate(context) {
 
         editor.edit((editBuilder) => {
           editor.selections.forEach(function (s) {
-            // Check if the first line of the selection is a comment
-            let isComment = document.lineAt(s.start.line).text.match(/^[.*+]/);
+            const endLine =
+              s.active.line > s.start.line && s.active.character === 0
+                ? s.end.line - 1
+                : s.end.line;
+
+            let isComment = null;
 
             // Comment/Uncomment every line in selection
-            for (let l = s.start.line; l <= s.end.line; l++) {
-              let pos = new vscode.Position(l, 0);
+            for (let l = s.start.line; l <= endLine; l++) {
               let line = document.lineAt(l);
+              // Skip whitespace only lines
+              if (!line.text.replace(/\s/g, "").length) continue;
+
+              // Check if the first line of the selection is a comment
+              if (isComment === null) isComment = line.text.match(/^[.*+]/);
+
               if (isComment) {
                 let newLine = line.text.replace(/^[.*+]+[\s/]?/, "");
                 editBuilder.replace(line.range, newLine);
                 // console.log("uncomment ", l);
               } else {
+                const pos = new vscode.Position(l, 0);
                 editBuilder.insert(pos, ". ");
                 // console.log("comment ", l);
               }
